@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>마음쉼표 테스트 사이트</title>
+  <meta name="description" content="학생 고민 상담 AI 서비스 테스트용 웹사이트">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=SUIT:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <nav class="topbar">
+        <div class="brand">
+          <span class="brand-mark">M</span>
+          <div>
+            <strong>마음쉼표</strong>
+            <p>학생 고민상담 AI 테스트</p>
+          </div>
+        </div>
+        <a class="ghost-button" href="#demo">데모 보기</a>
+      </nav>
+
+      <section class="hero-content">
+        <div class="hero-copy">
+          <p class="eyebrow">TEST SITE</p>
+          <h1>학생이 가볍게 털어놓고<br>바로 답을 받아볼 수 있는 상담 경험</h1>
+          <p class="hero-text">
+            시험 스트레스, 친구 관계, 진로 고민 같은 주제를 빠르게 입력하고
+            공감형 응답과 실천 제안을 테스트할 수 있는 샘플 사이트입니다.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-button" href="#demo">상담 체험 시작</a>
+            <button class="secondary-button" type="button" data-fill-demo>예시 고민 불러오기</button>
+          </div>
+          <ul class="hero-points">
+            <li>빠른 테스트용 정적 화면</li>
+            <li>모바일 대응 레이아웃</li>
+            <li>데모 응답 시나리오 포함</li>
+          </ul>
+        </div>
+
+        <aside class="hero-card">
+          <p class="card-label">오늘의 체크</p>
+          <div class="mood-grid">
+            <button type="button">불안해요</button>
+            <button type="button">지쳤어요</button>
+            <button type="button">답답해요</button>
+            <button type="button">괜찮아지고 싶어요</button>
+          </div>
+          <div class="stat-box">
+            <span>테스트 목표</span>
+            <strong>학생 고민 입력 → 공감 응답 → 다음 행동 제안</strong>
+          </div>
+        </aside>
+      </section>
+    </header>
+
+    <main>
+      <section class="info-strip">
+        <article>
+          <span>01</span>
+          <h2>익명처럼 가볍게</h2>
+          <p>로그인 없이 바로 흐름을 확인할 수 있는 테스트 화면입니다.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>공감형 답변</h2>
+          <p>입력 키워드에 따라 다른 톤의 예시 응답을 보여줍니다.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>행동 제안</h2>
+          <p>짧은 체크리스트와 한 줄 정리를 함께 제공합니다.</p>
+        </article>
+      </section>
+
+      <section class="demo-section" id="demo">
+        <div class="section-heading">
+          <p class="eyebrow">LIVE DEMO</p>
+          <h2>상담 테스트 화면</h2>
+          <p>예시 고민을 넣거나 직접 입력해서 화면 흐름을 확인해보세요.</p>
+        </div>
+
+        <div class="demo-layout">
+          <section class="chat-panel">
+            <div class="chat-header">
+              <div>
+                <strong>AI 상담창</strong>
+                <p>응답은 테스트용 고정 로직으로 생성됩니다.</p>
+              </div>
+              <button class="ghost-button small" type="button" data-reset-chat>초기화</button>
+            </div>
+
+            <div class="chat-log" id="chatLog" aria-live="polite">
+              <article class="message ai">
+                <span class="message-role">AI 상담사</span>
+                <p>안녕하세요. 요즘 가장 신경 쓰이는 고민을 편하게 적어주세요.</p>
+              </article>
+            </div>
+
+            <form class="chat-form" id="chatForm">
+              <label for="userInput" class="sr-only">고민 입력</label>
+              <textarea id="userInput" name="userInput" rows="4" placeholder="예: 시험이 다가오는데 집중이 안 되고 계속 불안해요."></textarea>
+              <div class="form-actions">
+                <p id="statusText">테스트 모드 준비 완료</p>
+                <button class="primary-button" type="submit">응답 받기</button>
+              </div>
+            </form>
+          </section>
+
+          <aside class="side-panel">
+            <div class="tip-card">
+              <p class="card-label">추천 테스트 문장</p>
+              <button type="button" class="preset-chip" data-preset="시험이 다가오는데 성적이 떨어질까 봐 너무 불안해요.">시험 불안</button>
+              <button type="button" class="preset-chip" data-preset="친구랑 어색해졌는데 먼저 말 걸기가 무서워요.">친구 관계</button>
+              <button type="button" class="preset-chip" data-preset="무슨 전공을 선택해야 할지 모르겠어서 진로가 막막해요.">진로 고민</button>
+            </div>
+
+            <div class="summary-card" id="summaryCard">
+              <p class="card-label">상담 요약</p>
+              <strong>아직 대화가 없어요.</strong>
+              <p>대화를 시작하면 핵심 감정과 제안이 여기에 정리됩니다.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
