@@ -1,4 +1,7 @@
 from fastapi import FastAPI
+from .main import init
+
+init()
 
 from api import auth
 from api import users
