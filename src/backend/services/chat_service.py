@@ -1,3 +1,4 @@
+import uuid
 from src.backend.rag.rag import get_context
 from src.backend.database.connection import get_connection
 
@@ -39,3 +40,27 @@ def get_chatroom(session_id: str):
         conn.close()
     
     return {"messages": messages}
+
+def create_chatroom(studentno: str, title: str = "New Chat Room"):
+    sessionId = str(uuid.uuid4())
+
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("insert into conversations values (%s, %s, %s)", (sessionId, studentno, title))
+
+        cursor.close()
+    except Exception:
+        conn.rollback()
+        raise
+
+    finally:
+        conn.close()
+
+    return {
+        "session_id": sessionId,
+        "title": title,
+        "sno": studentno,
+        "messages": []
+    }
