@@ -30,7 +30,7 @@ def get_current_user(
                 detail="존재하지 않는 토큰입니다"
             )
 
-            return payload
+        return payload
         
     except jwt.InvalidTokenError:
         raise HTTPException(

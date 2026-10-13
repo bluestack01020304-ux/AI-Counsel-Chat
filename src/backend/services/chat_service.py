@@ -1,4 +1,4 @@
-from ..rag.rag import get_context
+from src.backend.rag.rag import get_context
 
 
 def ai_chat(question: str, context: str) -> str:

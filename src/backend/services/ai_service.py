@@ -15,7 +15,6 @@ def init():
 def chat(question: str, context: str):
     if(client == None):
         print("Init 안됐습니다")
-        return
 
     prompt = f"""
 너는 학생에 진로 고민을 상담해주는 AI이다.

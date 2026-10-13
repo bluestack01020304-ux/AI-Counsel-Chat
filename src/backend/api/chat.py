@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from schemas.chat import ChatRequest, ChatResponse
-from services.chat_service import ask
+from src.backend.schemas.chat import ChatRequest, ChatResponse
+from src.backend.services.chat_service import ask
 
 router = APIRouter()
 

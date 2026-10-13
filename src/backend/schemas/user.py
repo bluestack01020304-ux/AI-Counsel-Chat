@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 
-def ResponseModel(BaseModel):
-    id: int
+class UserRequest(BaseModel): #받는 데이터 구조 타입 정의
+    access_token: str
+
+class UserResponse(BaseModel):
     username: str
-    role: str
+    #추가 정보
