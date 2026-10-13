@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 
-from api import auth
-from api import users
-from api import chat
+from src.backend.api import auth
+from src.backend.api import users
+from src.backend.api import chat
 
 app = FastAPI()
 

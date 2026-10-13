@@ -1,5 +1,4 @@
-import chromadb
-
+import chromadb # pc에 깔기
 
 client = chromadb.PersistentClient(
     path="./data/chroma"
