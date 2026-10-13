@@ -1,0 +1,80 @@
+/* 기본 스타일 초기화 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  background-color: #f4f6f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* 로그인 카드 용기 */
+.card {
+  background-color: #ffffff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+
+/* 타이틀 */
+.card h1 {
+  font-size: 24px;
+  color: #333333;
+  margin-bottom: 28px;
+  font-weight: 700;
+}
+
+/* 폼 레이아웃 */
+#loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 입력 필드 (이메일, 비밀번호) */
+#loginForm input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#loginForm input:focus {
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+}
+
+/* 로그인 버튼 */
+#loginForm button {
+  width: 100%;
+  padding: 13px;
+  margin-top: 8px;
+  background-color: #4A90E2;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#loginForm button:hover {
+  background-color: #357ABD;
+}
+
+#loginForm button:active {
+  background-color: #2A629A;
+}

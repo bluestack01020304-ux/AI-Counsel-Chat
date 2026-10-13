@@ -1,0 +1,137 @@
+/* 기본 초기화 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 1. body에 Flexbox 레이아웃 및 전체 높이(100vh) 설정 */
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column; /* 위에서 아래로 정렬 */
+    min-height: 100vh;      /* 화면 전체 높이 채우기 */
+}
+
+/* Header */
+header {
+    background-color: #ffffff;
+    text-align: center;
+    padding: 15px 0;
+}
+
+header h1 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Navigation Bar */
+nav {
+    background-color: #2b5b84;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px 0;
+}
+
+nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* 2. flex-grow: 1을 사용하여 남은 여백을 section이 모두 차지하도록 설정 */
+section {
+    flex: 1;                 /* 남은 공간을 알아서 모두 늘어나 채움 */
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px;
+    text-align: center;
+}
+
+section h2 {
+    font-size: 22px;
+    margin-bottom: 25px;
+}
+
+/* Form Table 스타일 */
+.form-table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    border: 1px solid #777777;
+    width: 450px;
+}
+
+.form-table th, 
+.form-table td {
+    border: 1px solid #777777;
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.form-table th {
+    background-color: #f2f2f2;
+    text-align: center;
+    width: 35%;
+}
+
+
+
+
+.form-table td input[type="text"],
+.form-table td select {
+    width: 100%;
+    padding: 4px;
+    border: 1px solid #ccc;
+}
+
+.unit {
+
+/* 버튼 스타일 */
+.btn-group {
+    text-align: center;
+    padding: 10px;
+    background-color: #f2f2f2;
+}
+
+.btn-group input[type="submit"],
+.btn-group input[type="reset"] {
+    padding: 5px 15px;
+    margin: 0 5px;
+    border: 1px solid #777777;
+    background-color: #e1e1e1;
+    cursor: pointer;
+}
+
+.btn-group input[type="submit"]:hover,
+.btn-group input[type="reset"]:hover {
+    background-color: #cccccc;
+}
+
+/* 3. Footer (자동으로 바닥에 고정됨) */
+footer {
+    background-color: #ffffff;
+    border-top: 1px solid #cccccc;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 12px;
+    color: #333333;
+    width: 100%;
+}
