@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from src.backend.schemas.user import UserResponse, UserRequest
+from src.backend.schemas.user import UserResponse
 from src.backend.core.security import get_current_user
 
 router = APIRouter()
