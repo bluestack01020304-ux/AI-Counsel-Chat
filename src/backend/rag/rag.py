@@ -32,4 +32,6 @@ def get_context(question):
 
     return context
 
-ask("경찰관이 되고 싶어")
+from ..services.ai_service import chat, init
+
+init()
