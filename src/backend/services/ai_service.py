@@ -28,7 +28,8 @@ def chat(question: str, context: str):
 학생의 질문:
 {question}
 
-참고 자료를 바탕으로 학생에게 이해하기 쉽게 설명해라"""
+참고 자료를 바탕으로 학생에게 이해하기 쉽게 설명해라
+3문장 이내로 답변해라"""
 
     response = client.models.generate_content(
         model="gemini-2.5-flash",
