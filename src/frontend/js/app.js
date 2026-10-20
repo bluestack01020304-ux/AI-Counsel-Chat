@@ -5,6 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const recommendWrapper = document.getElementById('recommend-wrapper');
   const chatList = document.getElementById('chat-list');
   const newChatBtn = document.getElementById('new-chat-btn');
+  const logoutButton = document.getElementById("logout-btn");
+
+  logoutButton.addEventListener("click", () => {
+    localStorage.removeItem("access_token");
+    window.location.href = "../html/login.html";
+  });
+
 
   const BACKEND_URL = 'http://0.0.0.0:8000';
 
