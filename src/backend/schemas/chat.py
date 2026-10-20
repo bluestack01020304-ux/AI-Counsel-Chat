@@ -7,4 +7,6 @@ class ChatResponse(BaseModel):
     answer: str
 
 class ChatRoomResponse(BaseModel):
+    session_id: str
+    title: str
     messages: list

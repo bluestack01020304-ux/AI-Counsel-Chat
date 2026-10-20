@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>곰곰이 교사 Center</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/T.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-icon">🐻‍❄️</div>
+        <div class="logo-text">
+          <h2>곰곰이</h2>
+          <span>진로 지도 교사 센터</span>
+        </div>
+      </div>
+
+      <button class="new-chat-btn" id="new-record-btn">
+        <i class="fa-solid fa-pen-to-square"></i> 상담 일지 작성
+      </button>
+
+      <div class="chat-history">
+        <div class="history-group">
+          <span class="group-title">담당 학급 / 학생 목록</span>
+          <ul id="student-list">
+            <!--학생들 목록-->
+          </ul>
+        </div>
+      </div>
+
+      <div class="user-profile">
+        <div class="avatar-wrapper">
+          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="교사 프로필">
+        </div>
+        <div class="user-info">
+          <div class="name" id="user-name">박진로 선생님</div>
+          <div class="desc" id="user-desc">2학년 3반 담임 / 진로진학부</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 메인 콘텐츠 영역 -->
+    <main class="main-content">
+      <header class="top-header">
+        <div class="header-title">
+          <h1>교사 전용 진로 지도 대시보드</h1>
+        </div>
+        <div class="header-right">
+          <span class="badge">2026학년도 1학기</span>
+          <button class="logout-btn" id="logout-btn">로그아웃</button>
+        </div>
+      </header>
+
+      <section class="welcome-section">
+        <div class="main-banner">
+          <div class="banner-text">
+            <h2 id="welcome-title">반갑습니다, 박진로 선생님! 🐻‍❄️</h2>
+            <p id="response-text">오늘도 학생들의 멋진 꿈과 진로를 지원해보세요.</p>
+          </div>
+        </div>
+
+        <!-- 학생 검색 및 상태 조회 -->
+        <div class="search-section">
+          <div class="input-box">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="student-search-input" placeholder="학생 이름, 학번, 관심 분야 또는 학과를 검색하세요...">
+            <button class="send-btn" id="search-btn">조회</button>
+          </div>
+        </div>
+
+        <!-- 교사용 핵심 맞춤 메뉴 -->
+        <div class="recommend-wrapper" id="recommend-wrapper">
+          <div class="section-title">
+            <h3>학생 진로 지도 업무 메뉴</h3>
+          </div>
+
+          <div class="card-grid" id="card-grid">
+            <div class="recommend-card">
+              <div class="card-icon"><i class="fa-solid fa-users-rectangle"></i></div>
+              <div class="card-text">
+                <h3>학급 진로 현황 분석</h3>
+                <p>희망 직업군 및 선호 학과 통계 확인</p>
+              </div>
+            </div>
+
+            <div class="recommend-card">
+              <div class="card-icon"><i class="fa-solid fa-book-bookmark"></i></div>
+              <div class="card-text">
+                <h3>생기부 AI 특기사항 보조</h3>
+                <p>상담 기록 기반 생활기록부 문구 생성</p>
+              </div>
+            </div>
+
+            <div class="recommend-card">
+              <div class="card-icon"><i class="fa-solid fa-clipboard-question"></i></div>
+              <div class="card-text">
+                <h3>수시/정시 진학 가이드</h3>
+                <p>학생별 성적 기반 추천 대학·학과 분석</p>
+              </div>
+            </div>
+
+            <div class="recommend-card">
+              <div class="card-icon"><i class="fa-regular fa-calendar-check"></i></div>
+              <div class="card-text">
+                <h3>상담 일정 및 예약 관리</h3>
+                <p>이번 주 예약된 학생 면담 일정 확인</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 상담 내역 미리보기 섹션 -->
+        <div class="recent-records-section">
+          <div class="section-title">
+            <h3>최근 진행한 상담 목록</h3>
+          </div>
+          <div class="record-table-container">
+            <table class="record-table">
+              <thead>
+                <tr>
+                  <th>날짜</th>
+                  <th>학생명</th>
+                  <th>상담 주제</th>
+                  <th>진로 희망</th>
+                  <th>상태</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="status-badge complete">완료</span></td>
+                </tr>
+                <tr>
+                  
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../js/Tapp.js"></script>
+</body>
+</html>
