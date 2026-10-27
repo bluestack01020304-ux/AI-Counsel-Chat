@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  let currentChatTitle = null;
   let currentSessionId = null;
 
   // 토큰을 붙여서 요청, 토큰 만료 시 로그인 화면으로

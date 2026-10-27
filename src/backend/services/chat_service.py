@@ -3,9 +3,10 @@ from fastapi import HTTPException
 
 from src.backend.rag.rag import get_context
 from src.backend.database.connection import get_connection
-from src.backend.services.ai_service import chat
+from src.backend.services.ai_service import chat, summarize_memory
 
 TITLE_MAX_LENGTH = 45  # conversations.title 컬럼 길이
+HISTORY_LIMIT = 10  # AI에 함께 보내는 현재 채팅방의 최근 메시지 수
 
 
 def _query(sql: str, params: tuple = (), commit: bool = False):
@@ -47,15 +48,45 @@ def _save_message(session_id: str, role: str, content: str):
     )
 
 
+def _get_history(session_id: str):
+    rows = _query(
+        "select role, content from chat where conversation_id=%s order by created_at desc, cno desc limit %s",
+        (session_id, HISTORY_LIMIT)
+    )
+
+    return list(reversed(rows))
+
+def get_memory(sno: int):
+    rows = _query("select summary from student_memory where sno=%s", (sno,))
+
+    return rows[0][0] if rows else ""
+
+def update_memory(sno: int, question: str, answer: str):
+    # 답변 후 백그라운드에서 실행되므로 실패해도 상담은 계속되게 함
+    try:
+        summary = summarize_memory(get_memory(sno), question, answer)
+
+        _query(
+            """insert into student_memory (sno, summary, updated_at) values (%s, %s, now())
+               on duplicate key update summary=values(summary), updated_at=values(updated_at)""",
+            (sno, summary),
+            commit=True
+        )
+    except Exception as e:
+        print("기억 갱신 실패:", e)
+
+
 def ask(question: str, sno: int, session_id: str = None):
+    history = []
     if session_id:
         _get_owned_title(session_id, sno)
+        history = _get_history(session_id)
 
     context = get_context(question)
 
     #AI 질문
     try:
-        answer = chat(question, context)
+        answer = chat(question, context, get_memory(sno), history)
     except Exception as e:
         print("AI 응답 실패:", e)
         raise HTTPException(status_code=502, detail="AI 응답을 받지 못했습니다. 잠시 후 다시 시도해 주세요.")
