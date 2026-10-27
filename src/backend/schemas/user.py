@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
 class UserResponse(BaseModel):
-    userid: int
+    userid: str
     username: str
     role: str

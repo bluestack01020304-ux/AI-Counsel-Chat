@@ -1,6 +1,6 @@
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from src.backend.schemas.chat import ChatRequest, ChatResponse, ChatRoomResponse, ChatRoomSummary, CreateChatRoomRequest
-from src.backend.services.chat_service import ask, get_chatroom, create_chatroom, list_chatrooms, update_memory
+from src.backend.services.chat_service import ask, get_chatroom, create_chatroom, list_chatrooms
 from src.backend.core.security import get_current_user
 
 router = APIRouter()
@@ -12,14 +12,9 @@ def get_current_student(current_user = Depends(get_current_user)):
     return current_user
 
 @router.post("/ask", response_model=ChatResponse)
-def ask_endpoint(request: ChatRequest, background_tasks: BackgroundTasks, current_user = Depends(get_current_student)):
+def ask_endpoint(request: ChatRequest, current_user = Depends(get_current_student)):
 
-    result = ask(request.question, current_user["userid"], request.session_id)
-
-    # 응답을 먼저 보내고, 다른 채팅방에서도 이어지도록 학생 기억을 갱신
-    background_tasks.add_task(update_memory, current_user["userid"], request.question, result["answer"])
-
-    return result
+    return ask(request.question, current_user["userid"], request.session_id)
 
 @router.get("/chatrooms", response_model=list[ChatRoomSummary])
 def list_chatrooms_endpoint(current_user = Depends(get_current_student)):

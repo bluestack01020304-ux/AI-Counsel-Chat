@@ -3,9 +3,9 @@ from fastapi import HTTPException
 
 from src.backend.rag.rag import get_context
 from src.backend.database.connection import get_connection
-from src.backend.services.ai_service import chat, summarize_memory
+from src.backend.services.ai_service import chat
 
-TITLE_MAX_LENGTH = 45  # conversations.title 컬럼 길이
+TITLE_MAX_LENGTH = 45  # 채팅방 제목 최대 길이
 HISTORY_LIMIT = 10  # AI에 함께 보내는 현재 채팅방의 최근 메시지 수
 
 
@@ -32,8 +32,14 @@ def _query(sql: str, params: tuple = (), commit: bool = False):
             cursor.close()
         conn.close()
 
-def _get_owned_title(session_id: str, sno: int):
-    rows = _query("select title from conversations where conversation_id=%s and sno=%s", (session_id, sno))
+def _get_owned_title(session_id: str, sno: str):
+    # uuid 형식이 아니면 DB에서 에러가 나므로 미리 걸러냄
+    try:
+        uuid.UUID(session_id)
+    except ValueError:
+        raise HTTPException(status_code=404, detail="채팅방을 찾을 수 없습니다")
+
+    rows = _query("select title from conversations where id=%s and sno=%s", (session_id, sno))
 
     if not rows:
         raise HTTPException(status_code=404, detail="채팅방을 찾을 수 없습니다")
@@ -42,7 +48,7 @@ def _get_owned_title(session_id: str, sno: int):
 
 def _save_message(session_id: str, role: str, content: str):
     _query(
-        "insert into chat (conversation_id, role, content, created_at) values (%s, %s, %s, now())",
+        "insert into chat (cno, role, content) values (%s, %s, %s)",
         (session_id, role, content),
         commit=True
     )
@@ -50,33 +56,13 @@ def _save_message(session_id: str, role: str, content: str):
 
 def _get_history(session_id: str):
     rows = _query(
-        "select role, content from chat where conversation_id=%s order by created_at desc, cno desc limit %s",
+        "select role, content from chat where cno=%s order by created_at desc limit %s",
         (session_id, HISTORY_LIMIT)
     )
 
     return list(reversed(rows))
 
-def get_memory(sno: int):
-    rows = _query("select summary from student_memory where sno=%s", (sno,))
-
-    return rows[0][0] if rows else ""
-
-def update_memory(sno: int, question: str, answer: str):
-    # 답변 후 백그라운드에서 실행되므로 실패해도 상담은 계속되게 함
-    try:
-        summary = summarize_memory(get_memory(sno), question, answer)
-
-        _query(
-            """insert into student_memory (sno, summary, updated_at) values (%s, %s, now())
-               on duplicate key update summary=values(summary), updated_at=values(updated_at)""",
-            (sno, summary),
-            commit=True
-        )
-    except Exception as e:
-        print("기억 갱신 실패:", e)
-
-
-def ask(question: str, sno: int, session_id: str = None):
+def ask(question: str, sno: str, session_id: str = None):
     history = []
     if session_id:
         _get_owned_title(session_id, sno)
@@ -86,7 +72,7 @@ def ask(question: str, sno: int, session_id: str = None):
 
     #AI 질문
     try:
-        answer = chat(question, context, get_memory(sno), history)
+        answer = chat(question, context, history=history)
     except Exception as e:
         print("AI 응답 실패:", e)
         raise HTTPException(status_code=502, detail="AI 응답을 받지 못했습니다. 잠시 후 다시 시도해 주세요.")
@@ -97,24 +83,24 @@ def ask(question: str, sno: int, session_id: str = None):
 
     return {"answer": answer, "session_id": session_id}
 
-def list_chatrooms(sno: int):
+def list_chatrooms(sno: str):
     # 최근 대화가 있는 방부터
     rows = _query(
-        """select c.conversation_id, c.title
-           from conversations c left join chat m on m.conversation_id = c.conversation_id
+        """select c.id, c.title
+           from conversations c left join chat m on m.cno = c.id
            where c.sno=%s
-           group by c.conversation_id, c.title
-           order by max(m.created_at) desc""",
+           group by c.id, c.title
+           order by max(m.created_at) desc nulls last""",
         (sno,)
     )
 
-    return [{"session_id": row[0], "title": row[1]} for row in rows]
+    return [{"session_id": str(row[0]), "title": row[1]} for row in rows]
 
-def get_chatroom(session_id: str, sno: int):
+def get_chatroom(session_id: str, sno: str):
     title = _get_owned_title(session_id, sno)
 
     rows = _query(
-        "select role, content, created_at from chat where conversation_id=%s order by created_at asc, cno asc",
+        "select role, content, created_at from chat where cno=%s order by created_at asc",
         (session_id,)
     )
 
@@ -122,12 +108,12 @@ def get_chatroom(session_id: str, sno: int):
 
     return {"session_id": session_id, "title": title, "messages": messages}
 
-def create_chatroom(sno: int, title: str):
+def create_chatroom(sno: str, title: str):
     session_id = str(uuid.uuid4())
     title = title.strip()[:TITLE_MAX_LENGTH] or "새 상담"
 
     _query(
-        "insert into conversations (conversation_id, sno, title) values (%s, %s, %s)",
+        "insert into conversations (id, sno, title) values (%s, %s, %s)",
         (session_id, sno, title),
         commit=True
     )

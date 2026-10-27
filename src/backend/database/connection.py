@@ -1,16 +1,13 @@
 import os
-import mysql.connector
-from mysql.connector import MySQLConnection
+import psycopg
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
-def get_connection() -> MySQLConnection:
-    return mysql.connector.connect(
-        host="localhost",
-        user=os.getenv("DB_ADMIN_ID"),
-        password=os.getenv("DB_ADMIN_PW"),
-        database="gomgomai",
-        use_pure=True
+def get_connection() -> psycopg.Connection:
+    # Supabase transaction pooler(6543)는 prepared statement를 지원하지 않음
+    return psycopg.connect(
+        os.getenv("DATABASE_URL"),
+        prepare_threshold=None
     )
