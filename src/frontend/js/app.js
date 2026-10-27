@@ -8,48 +8,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let currentChatTitle = null;
 
-  // 페이지 로드 시 유저 정보 API 호출
-  fetchUserData();
+  const BACKEND_URL = 'http://127.0.0.1:8000';
 
-  // 로그인된 유저의 정보를 API로 가져와 화면의 이름을 바꿔주는 함수
-  async function fetchUserData() {
-    const token = localStorage.getItem('access_token');
+  const token = localStorage.getItem("access_token");
+  if (!token) {
+    window.location.href = "../html/login.html";
+    return;
+  }
 
-    if (!token) {
-      document.getElementById('user-name').textContent = '게스트';
-      document.getElementById('user-desc').textContent = '로그인이 필요합니다';
-      document.getElementById('welcome-title').textContent = '안녕하세요!';
-      return;
-    }
+  let currentChatTitle = null;
+  let currentSessionId = null;
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/users/me`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (response.status === 401) {
-        logout();
-        return;
+  // 토큰을 붙여서 요청, 토큰 만료 시 로그인 화면으로
+  async function api(path, options = {}) {
+    const response = await fetch(`${BACKEND_URL}/api/chat${path}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       }
-      if (!response.ok) throw new Error('유저 정보 조회 실패');
+    });
 
-      const userData = await response.json();
-      const userName = userData.name || userData.username || '사용자';
-      const userDesc = userData.desc || userData.grade || '고등학교 2학년';
-
-      // HTML 요소에 동적으로 데이터 반영
-      document.getElementById('user-name').textContent = userName;
-      document.getElementById('user-desc').textContent = userDesc;
-      document.getElementById('welcome-title').textContent = `안녕하세요, ${userName}님!`;
-
-    } catch (error) {
-      console.error('사용자 정보 로드 오류:', error);
-      document.getElementById('user-name').textContent = '사용자';
-      document.getElementById('welcome-title').textContent = '안녕하세요!';
+    if (response.status === 401) {
+      localStorage.removeItem("access_token");
+      window.location.href = "../html/login.html";
     }
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.detail || '서버 응답 오류');
+    return data;
   }
 
   async function sendMessage() {
@@ -59,35 +46,60 @@ document.addEventListener('DOMContentLoaded', () => {
     if (recommendWrapper) recommendWrapper.style.display = 'none';
     chatMessages.style.display = 'flex';
 
-    if (!currentChatTitle) {
-      currentChatTitle = question;
-      addChatHistory(currentChatTitle);
-    }
-
     appendMessage('user', question);
     chatInput.value = '';
 
     const loadingMessageEl = appendMessage('ai', '곰곰이가 대답을 생각하고 있어요... 🐻');
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/chat/ask`, {
+      if (!currentSessionId) {
+        const room = await api('/chatrooms/createRoom', {
+          method: 'POST',
+          body: JSON.stringify({ title: question })
+        });
+        currentSessionId = room.session_id;
+        currentChatTitle = room.title;
+        addChatHistory(room.title, room.session_id);
+      }
+
+      const data = await api('/ask', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ question })
+        body: JSON.stringify({ question: question, session_id: currentSessionId })
       });
 
-      if (!response.ok) throw new Error('서버 응답 오류');
-
-      const data = await response.json();
       loadingMessageEl.innerText = data.answer;
 
     } catch (error) {
       console.error('오류 발생:', error);
-      console.error("오류 종류:", error.name);
-      console.error("오류 메시지:", error.message);
-      loadingMessageEl.innerText = "서버 연결에 실패했습니다. (백엔드 서버를 확인하세요)";
+      loadingMessageEl.innerText = error instanceof TypeError
+        ? "서버 연결에 실패했습니다. (백엔드 서버를 확인하세요)"
+        : error.message;
+    }
+  }
+
+  async function openChat(sessionId) {
+    try {
+      const room = await api(`/chatrooms/${sessionId}`);
+
+      startNewChat();
+      currentSessionId = room.session_id;
+      currentChatTitle = room.title;
+
+      if (recommendWrapper) recommendWrapper.style.display = 'none';
+      chatMessages.style.display = 'flex';
+      room.messages.forEach((m) => appendMessage(m.sender, m.message));
+    } catch (error) {
+      console.error('채팅방 불러오기 실패:', error);
+    }
+  }
+
+  async function loadChatList() {
+    try {
+      const rooms = await api('/chatrooms');
+      // addChatHistory가 맨 위에 추가하므로 오래된 방부터
+      rooms.reverse().forEach((room) => addChatHistory(room.title, room.session_id));
+    } catch (error) {
+      console.error('채팅 목록 불러오기 실패:', error);
     }
   }
 
@@ -101,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chatInput.focus();
 
     currentChatTitle = null;
+    currentSessionId = null;
   }
 
   function appendMessage(sender, text) {
@@ -113,13 +126,14 @@ document.addEventListener('DOMContentLoaded', () => {
     return msgDiv;
   }
 
-  function addChatHistory(title) {
+  function addChatHistory(title, sessionId) {
     const li = document.createElement('li');
     li.innerHTML = `
       <i class="fa-regular fa-folder"></i>
       <span class="chat-title"></span>
     `;
     li.querySelector('.chat-title').textContent = title;
+    li.addEventListener('click', () => openChat(sessionId));
     chatList.prepend(li);
   }
 
@@ -131,4 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (newChatBtn) {
     newChatBtn.addEventListener('click', startNewChat);
   }
+
+  loadChatList();
 });

@@ -3,19 +3,18 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-print(os.getenv("GEMINI_API_KEY"))
 
 client = None
 
 def init():
     global client
 
-    client = genai.Client(api_key="AQ.Ab8RN6IuEgToNLMmEnub4CUuxSxUDJSFcrMCByMxR7JJIhQ0Xw")
+    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
     return client
 
 def chat(question: str, context: str):
-    if(client == None):
-        print("Init 안됐습니다")
+    if client is None:
+        init()
 
     prompt = f"""
 너는 학생에 진로 고민을 상담해주는 AI이다.
