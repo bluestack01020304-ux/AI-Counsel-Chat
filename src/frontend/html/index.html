@@ -11,7 +11,7 @@
   <div class="app-container">
     <aside class="sidebar">
       <div class="sidebar-header">
-        <div class="logo-icon"></div>
+        <div class="logo-icon">🐻</div>
         <div class="logo-text">
           <h2>곰곰이</h2>
           <span>진로 상담 센터</span>
@@ -31,10 +31,10 @@
 
       <div class="user-profile">
         <div class="avatar-wrapper">
-          <img src="https://www.bing.com/images/search?view=detailV2&ccid=Ej2uV6Xw&id=03AC70B859B37773B9CB1A78CC7983CFFF655C60&thid=OIP.Ej2uV6Xw-vcLtCDl2vVM-wHaNL&mediaurl=https%3a%2f%2fi.pinimg.com%2foriginals%2f9f%2fbc%2ff7%2f9fbcf73a3ac68a3d8db7bb778f239bf0.jpg&exph=1309&expw=736&q=%ea%b3%b0%eb%8f%84%eb%a7%81+%ed%91%b8&FORM=IRPRST&ck=24375E175C6AFD081C4CF4F6DC33D9BE&selectedIndex=0&itb=0" alt="프로필">
+          <img src="https://i.pinimg.com/originals/9f/bc/f7/9fbcf73a3ac68a3d8db7bb778f239bf0.jpg" alt="프로필">
         </div>
         <div class="user-info">
-          <div class="name" id="user-name">임균정</div>
+          <div class="name" id="user-name">사용자</div>
           <div class="desc" id="user-desc">고등학교 2학년</div>
         </div>
       </div>
@@ -51,7 +51,7 @@
       <section class="welcome-section">
         <div class="main-banner">
           <div class="banner-text">
-            <h2 id="welcome-title">안녕하세요, 균정님! </h2>
+            <h2 id="welcome-title">안녕하세요!</h2>
             <p id="response-text">오늘 어떤 진로 고민을 나눠볼까요?</p>
           </div>
         </div>
@@ -73,32 +73,26 @@
           </div>
 
           <div class="card-grid" id="card-grid">
-            <div class="recommend-card">
+            <!-- 상담 예약 카드 (클릭 시 이동) -->
+            <div class="recommend-card" onclick="location.href='resV.html'" style="cursor: pointer;">
               <div class="card-icon"><i class="fa-regular fa-compass"></i></div>
               <div class="card-text">
-                <h3>적성 진단 & 직업 매칭</h3>
-                <p>내 성향에 맞는 직업군 찾아보기</p>
+                <h3>상담 예약</h3>
+                <p>진로 선생님과의 상담 예약하기</p>
               </div>
             </div>
 
-            <div class="recommend-card">
+            <!-- 정시&수시 진학 가이드 카드 (클릭 시 이동) -->
+            <div class="recommend-card" onclick="location.href='jinhak.html'" style="cursor: pointer;">
               <div class="card-icon"><i class="fa-solid fa-graduation-cap"></i></div>
               <div class="card-text">
-                <h3>학과 탐색 가이드</h3>
-                <p>관심 전공과 관련 학과 세부 가이드</p>
+                <h3>정시&수시 진학 가이드</h3>
+                <p>정시&수시 세부 가이드</p>
               </div>
             </div>
 
-            <div class="recommend-card">
+            <div class="recommend-card" onclick="location.href='QuesT.html'" style="cursor: pointer;">
               <div class="card-icon"><i class="fa-regular fa-file-lines"></i></div>
-              <div class="card-text">
-                <h3>자기소개서 첨삭</h3>
-                <p>스토리 구성 및 문장 다듬기</p>
-              </div>
-            </div>
-
-            <div class="recommend-card">
-              <div class="card-icon"><i class="fa-regular fa-comments"></i></div>
               <div class="card-text">
                 <h3>실전 면접 대비</h3>
                 <p>자주 나오는 질문 모음과 예상 답변</p>
@@ -110,6 +104,7 @@
     </main>
   </div>
 
+  <script src="../js/common.js"></script>
   <script src="../js/app.js"></script>
 </body>
 </html>
