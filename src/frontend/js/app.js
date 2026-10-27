@@ -85,6 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } catch (error) {
       console.error('오류 발생:', error);
+      console.error("오류 종류:", error.name);
+      console.error("오류 메시지:", error.message);
       loadingMessageEl.innerText = "서버 연결에 실패했습니다. (백엔드 서버를 확인하세요)";
     }
   }
