@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>곰곰이 진로 센터 - 실전 면접 대비</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/interView.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-text">
+          <h2>곰곰이</h2>
+          <span>진로 상담 센터</span>
+        </div>
+      </div>
+
+      <button class="new-chat-btn" id="new-interview-btn">
+        <i class="fa-solid fa-microphone-lines"></i> 새 면접 연습
+      </button>
+
+      <div class="chat-history">
+        <div class="history-group">
+          <span class="group-title">면접 유형</span>
+          <ul id="type-list">
+            <li class="active" data-type="personality"><i class="fa-regular fa-face-smile"></i> 인성 면접</li>
+            <li data-type="major"><i class="fa-solid fa-flask"></i> 전공 적합성 면접</li>
+            <li data-type="record"><i class="fa-regular fa-file-lines"></i> 학생부 기반 면접</li>
+            <li data-type="intro"><i class="fa-regular fa-user"></i> 자기소개 · 지원동기</li>
+            <li data-type="pressure"><i class="fa-solid fa-bolt"></i> 압박 면접</li>
+          </ul>
+        </div>
+
+        <div class="history-group">
+          <span class="group-title">최근 연습 기록</span>
+          <ul id="history-list"></ul>
+        </div>
+      </div>
+
+      <div class="user-profile">
+        <div class="avatar-wrapper">
+          <img src="https://i.pinimg.com/originals/9f/bc/f7/9fbcf73a3ac68a3d8db7bb778f239bf0.jpg" alt="프로필">
+        </div>
+        <div class="user-info">
+          <div class="name" id="user-name">사용자</div>
+          <div class="desc">면접 준비 중</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="top-header">
+        <div class="header-title">
+          <h1>실전 면접 대비</h1>
+        </div>
+        <button class="logout-btn" id="logout-btn">로그아웃</button>
+      </header>
+
+      <section class="interview-section">
+        <div class="setup-card">
+          <div class="setup-text">
+            <h2><i class="fa-solid fa-user-tie"></i> 곰곰이 면접 코치</h2>
+            <p>궁금한 면접 방법이나 예상 질문을 곰곰이에게 물어보세요.</p>
+          </div>
+        </div>
+
+        <div class="tip-grid">
+          <div class="tip-card">
+            <span class="tip-label">STAR 기법</span>
+            <p>상황 → 과제 → 행동 → 결과 순서로 경험을 설명해요.</p>
+          </div>
+          <div class="tip-card">
+            <span class="tip-label">PREP 기법</span>
+            <p>결론 → 이유 → 예시 → 결론으로 의견을 말해요.</p>
+          </div>
+          <div class="tip-card">
+            <span class="tip-label">답변 길이</span>
+            <p>한 질문당 1분 내외, 핵심부터 말하는 연습을 해요.</p>
+          </div>
+        </div>
+
+        <div class="suggest-wrapper" id="suggest-wrapper">
+          <div class="section-title">
+            <h3>이런 걸 물어볼 수 있어요</h3>
+          </div>
+          <div class="suggest-chips" id="suggest-chips"></div>
+        </div>
+
+        <div class="interview-chat" id="interview-chat">
+          <div class="chat-empty" id="chat-empty">
+            <i class="fa-regular fa-comments"></i>
+            <p>추천 질문을 누르거나 아래에 직접 질문을 입력해 보세요.</p>
+          </div>
+        </div>
+
+        <div class="interview-input">
+          <textarea id="interview-input" rows="1" placeholder="면접 방법이나 예상 질문을 물어보세요... (Shift+Enter 줄바꿈)"></textarea>
+          <button class="send-btn" id="interview-send-btn">
+            <i class="fa-solid fa-paper-plane"></i> 질문하기
+          </button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../js/common.js"></script>
+  <script src="../js/interView.js"></script>
+</body>
+</html>
