@@ -5,12 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const recommendWrapper = document.getElementById('recommend-wrapper');
   const chatList = document.getElementById('chat-list');
   const newChatBtn = document.getElementById('new-chat-btn');
-  const logoutButton = document.getElementById("logout-btn");
 
-  logoutButton.addEventListener("click", () => {
-    localStorage.removeItem("access_token");
-    window.location.href = "../html/login.html";
-  });
+  let currentChatTitle = null;
 
   const BACKEND_URL = 'http://127.0.0.1:8000';
 
@@ -44,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function sendMessage() {
-    const question = chatInput.value.trim();    
+    const question = chatInput.value.trim();
     if (!question) return;
 
     if (recommendWrapper) recommendWrapper.style.display = 'none';
@@ -125,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     msgDiv.classList.add('message-bubble', sender);
     msgDiv.innerText = text;
     chatMessages.appendChild(msgDiv);
-    
+
     chatMessages.scrollTop = chatMessages.scrollHeight;
     return msgDiv;
   }

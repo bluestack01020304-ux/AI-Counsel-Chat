@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>곰곰이 AI - 수시/정시 진학 가이드</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+  <link rel="stylesheet" href="../css/jinhak.css" />
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+  <header class="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-800 text-white shadow-lg">
+    <div class="max-w-6xl mx-auto px-4 py-8">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <a href="#" onclick="location.href = getHomePage(); return false;" class="inline-flex items-center text-indigo-100 hover:text-white text-sm font-medium mb-3 mr-2">
+            <i class="fa-solid fa-arrow-left mr-1"></i> 홈으로
+          </a>
+          <span class="inline-block bg-white/20 text-xs px-3 py-1 rounded-full font-medium mb-2 backdrop-blur-sm">
+            <i class="fa-solid fa-graduation-cap mr-1"></i> 곰곰이 AI 입시 컨설팅
+          </span>
+          <h1 class="text-3xl font-extrabold tracking-tight">수시 vs 정시 통합 진학 가이드</h1>
+          <p class="text-indigo-100 text-sm mt-1">대입 전형의 구조부터 나에게 맞는 전략, 학년별 로드맵까지 한눈에 파악하세요.</p>
+        </div>
+        <div class="flex items-center space-x-2 bg-white/10 p-2 rounded-xl backdrop-blur-md self-start md:self-auto">
+          <button onclick="setFilter('all')" id="btn-all" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-white text-indigo-700 shadow-sm">전체 보기</button>
+          <button onclick="setFilter('compare')" id="btn-compare" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:bg-white/10 text-white">수시 vs 정시</button>
+          <button onclick="setFilter('strategy')" id="btn-strategy" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:bg-white/10 text-white">전형별 전략</button>
+          <button onclick="setFilter('roadmap')" id="btn-roadmap" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:bg-white/10 text-white">학년별 로드맵</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-8 flex-grow space-y-12 w-full">
+
+    <section id="sec-compare" class="guide-sec space-y-6">
+      <div class="border-l-4 border-indigo-600 pl-4">
+        <h2 class="text-2xl font-bold text-slate-900">1. 수시 vs 정시 핵심 비교</h2>
+        <p class="text-slate-600 text-sm">지원 방식, 선발 기준, 원서 기회 등 두 축의 차이점을 파악해보세요.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow">
+          <div class="bg-indigo-50 border-b border-indigo-100 p-5 flex justify-between items-center">
+            <div>
+              <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Early Admissions</span>
+              <h3 class="text-xl font-bold text-indigo-900">수시 모집 (9월 접수)</h3>
+            </div>
+            <span class="bg-indigo-600 text-white text-xs px-3 py-1.5 rounded-full font-bold">최대 6회 지원</span>
+          </div>
+          <div class="p-6 space-y-4">
+            <div class="flex items-start space-x-3">
+              <i class="fa-solid fa-check text-indigo-600 mt-1"></i>
+              <div>
+                <strong class="text-slate-900 font-semibold">주요 평가 요소:</strong>
+                <p class="text-slate-600 text-sm">고등학교 3년 내신 성적, 학교생활기록부(세특·동아리·진로활동), 대학별 고사(면접·논술)</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3">
+              <i class="fa-solid fa-check text-indigo-600 mt-1"></i>
+              <div>
+                <strong class="text-slate-900 font-semibold">장점 & 특징:</strong>
+                <p class="text-slate-600 text-sm">꾸준한 성실성을 입증할 수 있음, 수능 한 번의 실수에 대한 부담감 감소</p>
+              </div>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800 flex items-center space-x-2">
+              <i class="fa-solid fa-triangle-exclamation text-amber-600 text-base"></i>
+              <span><strong>주의 (수시 납치):</strong> 수시 합격 시 등록 여부와 상관없이 정시 지원이 금지됩니다.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow">
+          <div class="bg-emerald-50 border-b border-emerald-100 p-5 flex justify-between items-center">
+            <div>
+              <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Regular Admissions</span>
+              <h3 class="text-xl font-bold text-emerald-900">정시 모집 (12월 접수)</h3>
+            </div>
+            <span class="bg-emerald-600 text-white text-xs px-3 py-1.5 rounded-full font-bold">가 / 나 / 다군 각 1회 (총 3회)</span>
+          </div>
+          <div class="p-6 space-y-4">
+            <div class="flex items-start space-x-3">
+              <i class="fa-solid fa-check text-emerald-600 mt-1"></i>
+              <div>
+                <strong class="text-slate-900 font-semibold">주요 평가 요소:</strong>
+                <p class="text-slate-600 text-sm">대학수학능력시험(수능) 성적 (표준점수, 백분위, 등급) 위주 평가</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3">
+              <i class="fa-solid fa-check text-emerald-600 mt-1"></i>
+              <div>
+                <strong class="text-slate-900 font-semibold">장점 & 특징:</strong>
+                <p class="text-slate-600 text-sm">내신 성적이 다소 부족해도 수능 점수로 역전 가능, 한 방 역전의 기회</p>
+              </div>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-700 flex items-center space-x-2">
+              <i class="fa-solid fa-circle-info text-slate-500 text-base"></i>
+              <span><strong>참고:</strong> 일부 상위권 대학은 정시에서도 내신 반영 비율을 일부 포함합니다.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-strategy" class="guide-sec space-y-6">
+      <div class="border-l-4 border-indigo-600 pl-4">
+        <h2 class="text-2xl font-bold text-slate-900">2. 주요 전형별 핵심 공략법</h2>
+        <p class="text-slate-600 text-sm">각 전형의 핵심 포인트를 클릭하여 상세보기 하세요.</p>
+      </div>
+
+      <div class="space-y-3">
+        <div class="border border-slate-200 rounded-xl bg-white overflow-hidden shadow-sm">
+          <button onclick="toggleAccordion('acc1')" class="w-full px-6 py-4 text-left font-bold text-slate-800 flex justify-between items-center hover:bg-slate-50">
+            <span class="flex items-center space-x-3">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+              <span>[수시] 학생부교과전형 - 내신 성적 위주 선발</span>
+            </span>
+            <i id="acc1-icon" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+          </button>
+          <div id="acc1" class="hidden px-6 pb-6 text-sm text-slate-600 space-y-3 border-t border-slate-100 pt-4">
+            <p>• <strong>핵심 지표:</strong> 고교 내신 등급 평균. (진로선택과목 성취도 반영 여부 확인)</p>
+            <p>• <strong>합격 열쇠:</strong> 상당수 대학에서 <strong>'수능 최저학력기준'</strong>을 적용하므로 수능 대비를 병행해야 합니다.</p>
+          </div>
+        </div>
+
+        <div class="border border-slate-200 rounded-xl bg-white overflow-hidden shadow-sm">
+          <button onclick="toggleAccordion('acc2')" class="w-full px-6 py-4 text-left font-bold text-slate-800 flex justify-between items-center hover:bg-slate-50">
+            <span class="flex items-center space-x-3">
+              <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+              <span>[수시] 학생부종합전형 (학종) - 서류 및 역량 종합 평가</span>
+            </span>
+            <i id="acc2-icon" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+          </button>
+          <div id="acc2" class="hidden px-6 pb-6 text-sm text-slate-600 space-y-3 border-t border-slate-100 pt-4">
+            <p>• <strong>핵심 지표:</strong> 학업역량, 진로역량, 공동체역량 (생활기록부 맥락 평가)</p>
+            <p>• <strong>합격 열쇠:</strong> <strong>세부능력 및 특기사항(세특)</strong>에서 진로 관련 탐색 과정과 적극적 태도를 드러내야 합니다.</p>
+          </div>
+        </div>
+
+        <div class="border border-slate-200 rounded-xl bg-white overflow-hidden shadow-sm">
+          <button onclick="toggleAccordion('acc3')" class="w-full px-6 py-4 text-left font-bold text-slate-800 flex justify-between items-center hover:bg-slate-50">
+            <span class="flex items-center space-x-3">
+              <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+              <span>[수시] 논술전형 - 대학별 논술 고사 성적 위주</span>
+            </span>
+            <i id="acc3-icon" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+          </button>
+          <div id="acc3" class="hidden px-6 pb-6 text-sm text-slate-600 space-y-3 border-t border-slate-100 pt-4">
+            <p>• <strong>핵심 지표:</strong> 인문/수리 논술 역량</p>
+            <p>• <strong>합격 열쇠:</strong> 수능 최저학력기준을 충족할 경우 실질 경쟁률이 크게 하락합니다.</p>
+          </div>
+        </div>
+
+        <div class="border border-slate-200 rounded-xl bg-white overflow-hidden shadow-sm">
+          <button onclick="toggleAccordion('acc4')" class="w-full px-6 py-4 text-left font-bold text-slate-800 flex justify-between items-center hover:bg-slate-50">
+            <span class="flex items-center space-x-3">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              <span>[정시] 수능위주전형 - 수능 성적 가/나/다군 산출</span>
+            </span>
+            <i id="acc4-icon" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+          </button>
+          <div id="acc4" class="hidden px-6 pb-6 text-sm text-slate-600 space-y-3 border-t border-slate-100 pt-4">
+            <p>• <strong>핵심 지표:</strong> 표준점수, 백분위</p>
+            <p>• <strong>합격 열쇠:</strong> 대학별 영역별 반영 비율과 가산점을 분석하여 유리한 조합을 찾는 것이 핵심입니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-roadmap" class="guide-sec space-y-6">
+      <div class="border-l-4 border-indigo-600 pl-4">
+        <h2 class="text-2xl font-bold text-slate-900">3. 학년별/시기별 입시 로드맵</h2>
+        <p class="text-slate-600 text-sm">고등학교 3년 동안 시기별로 챙겨야 할 핵심 할 일을 확인하세요.</p>
+      </div>
+
+      <div class="flex border-b border-slate-200 space-x-4">
+        <button onclick="setRoadmapTab('g1')" id="rtab-g1" class="roadmap-tab border-b-2 border-indigo-600 text-indigo-600 font-bold pb-3 px-2 text-sm">고등학교 1학년</button>
+        <button onclick="setRoadmapTab('g2')" id="rtab-g2" class="roadmap-tab border-b-2 border-transparent text-slate-500 hover:text-slate-700 font-medium pb-3 px-2 text-sm">고등학교 2학년</button>
+        <button onclick="setRoadmapTab('g3')" id="rtab-g3" class="roadmap-tab border-b-2 border-transparent text-slate-500 hover:text-slate-700 font-medium pb-3 px-2 text-sm">고등학교 3학년</button>
+      </div>
+
+      <div id="rcontent-g1" class="roadmap-content bg-white p-6 rounded-2xl border border-slate-200 space-y-4">
+        <h3 class="font-bold text-indigo-900 text-lg flex items-center"><i class="fa-solid fa-seedling mr-2 text-emerald-500"></i> 고1: 탐색 및 기초 체력 다지기</h3>
+        <ul class="space-y-3 text-sm text-slate-700">
+          <li class="flex items-start"><span class="bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded mr-3 text-xs mt-0.5">상반기</span> 진로 적성 탐색, 첫 내신 지필고사 적응</li>
+          <li class="flex items-start"><span class="bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded mr-3 text-xs mt-0.5">하반기</span> 2학년 선택과목 신중히 신청, 동아리 및 진로활동 구체화</li>
+        </ul>
+      </div>
+
+      <div id="rcontent-g2" class="roadmap-content hidden bg-white p-6 rounded-2xl border border-slate-200 space-y-4">
+        <h3 class="font-bold text-indigo-900 text-lg flex items-center"><i class="fa-solid fa-tree mr-2 text-indigo-500"></i> 고2: 심화 탐구 및 유리한 전형 구체화</h3>
+        <ul class="space-y-3 text-sm text-slate-700">
+          <li class="flex items-start"><span class="bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded mr-3 text-xs mt-0.5">상반기</span> 전공 관련 깊이 있는 탐구활동(세특 심화), 모의고사 분석</li>
+          <li class="flex items-start"><span class="bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded mr-3 text-xs mt-0.5">하반기</span> [수시 주력 vs 정시 주력] 1차 방향성 결정</li>
+        </ul>
+      </div>
+
+      <div id="rcontent-g3" class="roadmap-content hidden bg-white p-6 rounded-2xl border border-slate-200 space-y-4">
+        <h3 class="font-bold text-indigo-900 text-lg flex items-center"><i class="fa-solid fa-trophy mr-2 text-amber-500"></i> 고3: 실전과 집중 (수시 지원 & 수능)</h3>
+        <ul class="space-y-3 text-sm text-slate-700">
+          <li class="flex items-start"><span class="bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded mr-3 text-xs mt-0.5">9월</span> 수시 원서 접수 (최대 6회) 및 면접/논술 준비</li>
+          <li class="flex items-start"><span class="bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded mr-3 text-xs mt-0.5">3월~6월</span> 6월 모평 성적으로 수능 위치 파악, 3학년 1학기 내신 마감</li>
+          <li class="flex items-start"><span class="bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded mr-3 text-xs mt-0.5">11월</span> 대학수학능력시험</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="bg-slate-900 text-slate-400 text-xs py-6 mt-12">
+    <div class="max-w-6xl mx-auto px-4 text-center space-y-2">
+      <p>© 곰곰이 AI 진로/진학 상담 플랫폼. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="../js/common.js"></script>
+  <script src="../js/jishak.js"></script>
+</body>
+</html>
