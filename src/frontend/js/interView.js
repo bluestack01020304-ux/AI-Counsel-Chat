@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
   const typeList = document.getElementById('type-list');
-  const typeBadge = document.getElementById('type-badge');
-  const majorInput = document.getElementById('major-input');
   const suggestChips = document.getElementById('suggest-chips');
   const chatBox = document.getElementById('interview-chat');
   const chatEmpty = document.getElementById('chat-empty');
@@ -66,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
     typeList.querySelectorAll('li').forEach(item => item.classList.remove('active'));
     li.classList.add('active');
     currentType = li.dataset.type;
-    typeBadge.textContent = interviewTypes[currentType].name;
     renderSuggestions();
   });
 
@@ -91,14 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function buildPrompt(question) {
-    const major = majorInput.value.trim();
-    const context = [
-      '[실전 면접 대비]',
-      `면접 유형: ${interviewTypes[currentType].name}`,
-      major ? `지원 학과: ${major}` : null,
-    ].filter(Boolean).join(' / ');
-
-    return `${context}\n질문: ${question}`;
+    return `[실전 면접 대비] 면접 유형: ${interviewTypes[currentType].name}\n질문: ${question}`;
   }
 
   async function sendQuestion(question) {
