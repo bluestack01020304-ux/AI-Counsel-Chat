@@ -1,16 +1,15 @@
 import uuid
 from src.backend.rag.rag import get_context
 from src.backend.database.connection import get_connection
+from src.backend.services.ai_service import chat
 
-def ai_chat(question: str, context: str) -> str:
-    print("chated")
     
 def ask(question: str):
 
     context = get_context(question)
 
     #AI 질문
-    answer = ai_chat(question, context)
+    answer = chat(question, context)
     return {"answer": answer}
 
 def get_chatroom(session_id: str):

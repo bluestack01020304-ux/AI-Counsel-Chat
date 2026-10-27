@@ -13,7 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
+<<<<<<< HEAD
+  const BACKEND_URL = 'http://127.0.0.1:8000';
+=======
   const BACKEND_URL = 'http://0.0.0.0:8000';
+>>>>>>> 06d4cd5a23264e374da6961960b2ecea71031089
 
   let currentChatTitle = null;
 
@@ -36,12 +40,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingMessageEl = appendMessage('ai', '곰곰이가 대답을 생각하고 있어요... 🐻');
 
     try {
+<<<<<<< HEAD
+      const response = await fetch(`${BACKEND_URL}/api/chat/ask`, {
+=======
       const response = await fetch(BACKEND_URL, {
+>>>>>>> 06d4cd5a23264e374da6961960b2ecea71031089
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
+<<<<<<< HEAD
+        body: JSON.stringify({ question: question })
+=======
         body: JSON.stringify({ message: question })
+>>>>>>> 06d4cd5a23264e374da6961960b2ecea71031089
       });
 
       if (!response.ok) throw new Error('서버 응답 오류');
@@ -49,12 +61,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await response.json();
       
       const aiReply = data.reply || data.answer || data.message;
+<<<<<<< HEAD
+      loadingMessageEl.innerText = aiReply; 
+=======
       loadingMessageEl.innerText = aiReply;
+>>>>>>> 06d4cd5a23264e374da6961960b2ecea71031089
 
 
 
     } catch (error) {
       console.error('오류 발생:', error);
+<<<<<<< HEAD
+      console.error("오류 종류:", error.name)
+      console.error("오류 메시지:", error.message)
+=======
+>>>>>>> 06d4cd5a23264e374da6961960b2ecea71031089
       loadingMessageEl.innerText = "서버 연결에 실패했습니다. (백엔드 서버를 확인하세요)";
     }
   }
