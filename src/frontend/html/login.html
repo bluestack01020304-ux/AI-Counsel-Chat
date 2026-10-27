@@ -2,17 +2,22 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>곰곰이 AI - 로그인</title>
   <link rel="stylesheet" href="../css/login.css" />
-</head> 
+</head>
 <body>
 
   <div class="card">
-    <h1>곰곰이</h1>
+    <h1>🐻 곰곰이</h1>
 
     <form id="loginForm">
-      <input type="text" id="email" name="username" placeholder="아이디" autocomplete="username" required />
-      <input type="password" id="password" placeholder="비밀번호" required />
+      <div class="role-tabs">
+        <label><input type="radio" name="role" value="students" checked /> 학생</label>
+        <label><input type="radio" name="role" value="teachers" /> 교사</label>
+      </div>
+      <input type="text" id="username" placeholder="아이디" autocomplete="username" required />
+      <input type="password" id="password" placeholder="비밀번호" autocomplete="current-password" required />
       <button type="submit">로그인</button>
     </form>
   </div>

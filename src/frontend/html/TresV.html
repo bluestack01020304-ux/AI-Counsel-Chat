@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>곰곰이 진로 센터 - 상담 일정 및 예약 관리</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/TresV.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-text">
+          <h2>곰곰이</h2>
+          <span>진로 지도 교사 센터</span>
+        </div>
+      </div>
+
+      <button class="new-chat-btn" id="open-modal-btn">
+        <i class="fa-solid fa-plus"></i> 일정 등록하기
+      </button>
+
+      <div class="chat-history">
+        <div class="history-group">
+          <span class="group-title">예약 필터</span>
+          <ul class="filter-list">
+            <li class="active"><i class="fa-solid fa-list-check"></i> 전체 예약</li>
+            <li><i class="fa-solid fa-clock"></i> 대기 중인 예약</li>
+            <li><i class="fa-solid fa-circle-check"></i> 확정된 예약</li>
+            <li><i class="fa-solid fa-circle-xmark"></i> 취소/반려</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="user-profile">
+        <div class="avatar-wrapper">
+          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="교사 프로필">
+        </div>
+        <div class="user-info">
+          <div class="name">박진로 선생님</div>
+          <div class="desc">2학년 3반 담임</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="top-header">
+        <div class="header-title">
+          <h1>상담 일정 및 예약 관리</h1>
+        </div>
+        <div class="header-right">
+          <span class="badge">2026학년도 2학기</span>
+          <button class="logout-btn">로그아웃</button>
+        </div>
+      </header>
+
+      <div class="schedule-container">
+        <section class="calendar-section">
+          <div class="section-card">
+            <div class="calendar-header">
+              <h2><i class="fa-regular fa-calendar-days"></i> 2026년 10월</h2>
+              <div class="calendar-nav">
+                <button class="icon-btn"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="today-btn">오늘</button>
+                <button class="icon-btn"><i class="fa-solid fa-chevron-right"></i></button>
+              </div>
+            </div>
+
+            <div class="mini-calendar">
+              <div class="weekdays">
+                <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+              </div>
+              <div class="days">
+                <span class="prev-month">27</span><span class="prev-month">28</span><span class="prev-month">29</span><span class="prev-month">30</span>
+                <span>1</span><span>2</span><span>3</span>
+                <span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+                <span>11</span><span>12</span><span class="day active-day">13</span><span>14</span><span class="day has-event">15</span><span>16</span><span>17</span>
+                <span class="day has-event">18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span>
+                <span>25</span><span>26</span><span>27</span><span>28</span><span>29</span><span>30</span><span class="next-month">1</span>
+              </div>
+            </div>
+
+            <hr class="divider">
+
+            <div class="timeslot-management">
+              <div class="timeslot-header">
+                <h3 id="timeslot-title">상담 가능 시간</h3>
+                <span class="timeslot-status" id="timeslot-count">총 0개 슬롯</span>
+              </div>
+              <!-- API로 가져온 타임슬롯이 생성될 컨테이너 -->
+              <div class="timeslot-grid" id="timeslot-grid">
+                <!-- 동적 생성 영역 -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="appointments-section">
+          <div class="section-card">
+            <div class="card-header">
+              <h2><i class="fa-solid fa-clock-rotate-left"></i> 실시간 상담 신청 내역</h2>
+              <span class="pending-count">대기 3건</span>
+            </div>
+
+            <div class="appointment-list">
+              <div class="appointment-card pending">
+                <div class="appt-status-bar"></div>
+                <div class="appt-main">
+                  <div class="appt-user">
+                    <div class="user-avatar">박</div>
+                    <div class="user-meta">
+                      <h4>박도현 <span class="student-info">(2학년 3반 14번)</span></h4>
+                      <span class="appt-type">방문 상담</span>
+                    </div>
+                  </div>
+                  <div class="appt-time">
+                    <i class="fa-regular fa-clock"></i> 10월 15일 (목) 15:00 ~ 15:40
+                  </div>
+                  <p class="appt-topic"><strong>상담 안건:</strong> 이공계학과 수시 전형 선택 및 생기부 점검</p>
+                  <div class="appt-actions">
+                    <button class="btn btn-approve"><i class="fa-solid fa-check"></i> 예약 승인</button>
+                    <button class="btn btn-reject"><i class="fa-solid fa-xmark"></i> 반려</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="appointment-card confirmed">
+                <div class="appt-status-bar"></div>
+                <div class="appt-main">
+                  <div class="appt-user">
+                    <div class="user-avatar">김</div>
+                    <div class="user-meta">
+                      <h4>김민준 <span class="student-info">(2학년 3반 05번)</span></h4>
+                      <span class="appt-type online">화상 상담 (Google Meet)</span>
+                    </div>
+                  </div>
+                  <div class="appt-time">
+                    <i class="fa-regular fa-clock"></i> 10월 13일 (화) 10:00 ~ 10:40
+                  </div>
+                  <p class="appt-topic"><strong>상담 안건:</strong> 컴퓨터공학과 자소서 첨삭 및 포트폴리오 질문</p>
+                  <div class="appt-actions">
+                    <button class="btn btn-secondary"><i class="fa-solid fa-video"></i>예약 완료</button>
+                    <button class="btn btn-outline"><i class="fa-solid fa-pen-to-square"></i> 일지 작성</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="appointment-card pending">
+                <div class="appt-status-bar"></div>
+                <div class="appt-main">
+                  <div class="appt-user">
+                    <div class="user-avatar">최</div>
+                    <div class="user-meta">
+                      <h4>최지우 <span class="student-info">(2학년 3반 28번)</span></h4>
+                      <span class="appt-type">방문 상담</span>
+                    </div>
+                  </div>
+                  <div class="appt-time">
+                    <i class="fa-regular fa-clock"></i> 10월 18일 (일) 14:00 ~ 14:40
+                  </div>
+                  <p class="appt-topic"><strong>상담 안건:</strong> 문/이과 계열 전환 상담 및 적성검사 결과 검토</p>
+                  <div class="appt-actions">
+                    <button class="btn btn-approve"><i class="fa-solid fa-check"></i> 예약 승인</button>
+                    <button class="btn btn-reject"><i class="fa-solid fa-xmark"></i> 반려</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="schedule-modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fa-regular fa-calendar-plus"></i> 새로운 상담 타임슬롯 오픈</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form class="modal-form">
+          <div class="form-group">
+            <label>상담 날짜</label>
+            <input type="date" value="2026-10-15">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>시작 시간</label>
+              <input type="time" value="14:00">
+            </div>
+            <div class="form-group">
+              <label>종료 시간</label>
+              <input type="time" value="14:40">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>상담 방식</label>
+            <select>
+              <option value="offline">방문 상담 (상담실)</option>
+              <option value="online">온라인 화상 상담</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>비고 및 전달사항</label>
+            <textarea placeholder="학생들에게 사전 공지할 내용을 작성하세요..." rows="3"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline modal-close-btn">취소</button>
+        <button class="btn btn-primary">타임슬롯 생성</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/common.js"></script>
+  <script src="../js/TresV.js"></script>
+</body>
+</html>
