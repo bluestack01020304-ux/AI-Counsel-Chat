@@ -4,3 +4,4 @@ __pycache__/
 .vscode/
 .core/
 data/chroma/
+.venv
