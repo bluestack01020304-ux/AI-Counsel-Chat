@@ -1,6 +1,7 @@
 from google import genai
 from dotenv import load_dotenv
 import os
+import time
 
 load_dotenv()
 
@@ -9,19 +10,29 @@ client = None
 def init():
     global client
 
-    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise RuntimeError("GEMINI_API_KEY가 설정되지 않았습니다. 프로젝트 루트의 .env 파일을 확인하세요.")
+
+    client = genai.Client(api_key=api_key)
     return client
 
 def _generate(prompt: str):
     if client is None:
         init()
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt
-    )
-
-    return response.text
+    # Gemini가 과부하(503) 등으로 일시적으로 실패하면 잠시 후 재시도
+    for attempt in range(3):
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt
+            )
+            return response.text
+        except Exception:
+            if attempt == 2:
+                raise
+            time.sleep(2 ** attempt)
 
 def chat(question: str, context: str, memory: str = "", history: list = None):
     # history: [(role, content), ...] 현재 채팅방의 최근 대화
