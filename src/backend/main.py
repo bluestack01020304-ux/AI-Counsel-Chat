@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from src.backend.api import auth
 from src.backend.api import users
 from src.backend.api import chat
+from src.backend.api import reservation
 
 app = FastAPI()
 
@@ -34,6 +35,11 @@ app.include_router(
 app.include_router(
     chat.router,
     prefix="/api/chat",
+)
+
+app.include_router(
+    reservation.router,
+    prefix="/api/reservations",
 )
 
 # 프론트엔드도 같은 서버에서 제공: http://127.0.0.1:8000/ 접속 시 로그인 화면

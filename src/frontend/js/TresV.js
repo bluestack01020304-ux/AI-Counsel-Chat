@@ -3,13 +3,25 @@ document.addEventListener('DOMContentLoaded', () => {
   initModalEvents();
   initFilterEvents();
   initAppointmentActions();
+  fetchUserName();
   fetchAppointmentsFromAPI();
 });
 
+const STATUS_FILTERS = {
+  '전체': () => true,
+  '대기': (r) => r.status === 'pending',
+  '확정': (r) => r.status === 'confirmed',
+  '취소': (r) => r.status === 'rejected' || r.status === 'cancelled',
+};
+
 let currentDate = new Date();
+let selectedDate = new Date();
+let monthTimeslots = [];
+let appointments = [];
+let currentFilter = '전체';
 
 function initCalendar() {
-  renderCalendar(currentDate);
+  loadMonth();
 
   const prevBtn = document.querySelector('.calendar-nav .icon-btn:first-child');
   const nextBtn = document.querySelector('.calendar-nav .icon-btn:last-child');
@@ -17,24 +29,40 @@ function initCalendar() {
 
   if (prevBtn) {
     prevBtn.addEventListener('click', () => {
+      currentDate.setDate(1);
       currentDate.setMonth(currentDate.getMonth() - 1);
-      renderCalendar(currentDate);
+      loadMonth();
     });
   }
 
   if (nextBtn) {
     nextBtn.addEventListener('click', () => {
+      currentDate.setDate(1);
       currentDate.setMonth(currentDate.getMonth() + 1);
-      renderCalendar(currentDate);
+      loadMonth();
     });
   }
 
   if (todayBtn) {
     todayBtn.addEventListener('click', () => {
       currentDate = new Date();
-      renderCalendar(currentDate);
+      selectedDate = new Date();
+      loadMonth();
     });
   }
+}
+
+// 달이 바뀔 때마다 그 달의 타임슬롯을 받아 달력/슬롯 목록을 다시 그림
+async function loadMonth() {
+  renderCalendar(currentDate);
+  try {
+    monthTimeslots = await fetchMonthTimeslots(currentDate);
+  } catch (error) {
+    monthTimeslots = [];
+    console.error('타임슬롯 로드 오류:', error);
+  }
+  renderCalendar(currentDate);
+  onDateSelect(selectedDate);
 }
 
 function renderCalendar(date) {
@@ -55,7 +83,12 @@ function renderCalendar(date) {
   const lastDate = new Date(year, month + 1, 0).getDate();
   const prevLastDate = new Date(year, month, 0).getDate();
 
-  const today = new Date();
+  const eventDays = new Set(
+    monthTimeslots
+      .map(slot => new Date(slot.start_at))
+      .filter(d => d.getFullYear() === year && d.getMonth() === month)
+      .map(d => d.getDate())
+  );
 
   for (let i = firstDay - 1; i >= 0; i--) {
     const span = document.createElement('span');
@@ -67,16 +100,13 @@ function renderCalendar(date) {
   for (let i = 1; i <= lastDate; i++) {
     const span = document.createElement('span');
     span.textContent = i;
+    span.classList.add('day');
 
-    const isToday =
-      today.getFullYear() === year &&
-      today.getMonth() === month &&
-      today.getDate() === i;
-
-    if (isToday) {
-      span.classList.add('day', 'active-day');
-    } else {
-      span.classList.add('day');
+    if (isSameDay(selectedDate, new Date(year, month, i))) {
+      span.classList.add('active-day');
+    }
+    if (eventDays.has(i)) {
+      span.classList.add('has-event');
     }
 
     span.addEventListener('click', () => {
@@ -84,7 +114,8 @@ function renderCalendar(date) {
         el.classList.remove('active-day');
       });
       span.classList.add('active-day');
-      onDateSelect(year, month + 1, i);
+      selectedDate = new Date(year, month, i);
+      onDateSelect(selectedDate);
     });
 
     daysContainer.appendChild(span);
@@ -100,16 +131,48 @@ function renderCalendar(date) {
   }
 }
 
-function onDateSelect(year, month, day) {
-  const timeslotHeader = document.querySelector('.timeslot-header h3');
+function onDateSelect(date) {
+  const timeslotHeader = document.getElementById('timeslot-title');
   if (timeslotHeader) {
-    const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
-    const selectedDateObj = new Date(year, month - 1, day);
-    const dayName = daysOfWeek[selectedDateObj.getDay()];
-    timeslotHeader.textContent = `${month}월 ${day}일 (${dayName}) 상담 가능 시간`;
+    timeslotHeader.textContent = `${date.getMonth() + 1}월 ${date.getDate()}일 (${WEEKDAY_NAMES[date.getDay()]}) 상담 가능 시간`;
   }
 
-  fetchTimeslotsForDate(year, month, day);
+  renderTimeslots(monthTimeslots.filter(slot => isSameDay(new Date(slot.start_at), date)));
+}
+
+function renderTimeslots(slots) {
+  const grid = document.getElementById('timeslot-grid');
+  const count = document.getElementById('timeslot-count');
+  if (count) count.textContent = `총 ${slots.length}개 슬롯`;
+  if (!grid) return;
+
+  if (slots.length === 0) {
+    grid.innerHTML = '<div class="timeslot-chip disabled"><span class="time">등록된 상담 시간이 없습니다</span></div>';
+    return;
+  }
+
+  grid.innerHTML = slots.map(slot => {
+    const time = `${formatTime(new Date(slot.start_at))} - ${formatTime(new Date(slot.end_at))}`;
+    let chipClass = 'available';
+    let badge = '신청 대기';
+
+    if (slot.status === 'pending') {
+      chipClass = 'booked';
+      badge = `${escapeHtml(slot.student_name)} 승인 대기`;
+    } else if (slot.status === 'confirmed') {
+      chipClass = 'booked';
+      badge = `${escapeHtml(slot.student_name)} 확정`;
+    } else if (new Date(slot.start_at) <= new Date()) {
+      chipClass = 'disabled';
+      badge = '마감됨';
+    }
+
+    return `
+      <div class="timeslot-chip ${chipClass}">
+        <span class="time">${time}</span>
+        <span class="slot-badge">${badge}</span>
+      </div>`;
+  }).join('');
 }
 
 function initModalEvents() {
@@ -119,6 +182,11 @@ function initModalEvents() {
 
   if (openBtn && modal) {
     openBtn.addEventListener('click', () => {
+      // 달력에서 선택한 날짜로 기본값 설정
+      const y = selectedDate.getFullYear();
+      const m = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      const d = String(selectedDate.getDate()).padStart(2, '0');
+      document.querySelector('.modal-form input[type="date"]').value = `${y}-${m}-${d}`;
       modal.style.display = 'flex';
     });
   }
@@ -137,13 +205,12 @@ function initModalEvents() {
     });
   }
 
-  const modalForm = document.querySelector('.modal-form');
   const createBtn = document.querySelector('.modal-footer .btn-primary');
 
   if (createBtn) {
     createBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      createNewTimeslot();
+      createNewTimeslot(createBtn);
     });
   }
 }
@@ -156,7 +223,8 @@ function initFilterEvents() {
       item.classList.add('active');
 
       const filterText = item.textContent.trim();
-      filterAppointments(filterText);
+      currentFilter = Object.keys(STATUS_FILTERS).find(key => filterText.includes(key)) || '전체';
+      renderAppointments();
     });
   });
 }
@@ -165,83 +233,154 @@ function initAppointmentActions() {
   const appointmentList = document.querySelector('.appointment-list');
   if (!appointmentList) return;
 
-  appointmentList.addEventListener('click', (e) => {
+  appointmentList.addEventListener('click', async (e) => {
     const approveBtn = e.target.closest('.btn-approve');
     const rejectBtn = e.target.closest('.btn-reject');
+    const card = e.target.closest('.appointment-card');
+    if (!card || (!approveBtn && !rejectBtn)) return;
 
-    if (approveBtn) {
-      const card = approveBtn.closest('.appointment-card');
-      if (card) {
-        card.classList.remove('pending');
-        card.classList.add('confirmed');
-        
-        const actionsDiv = card.querySelector('.appt-actions');
-        actionsDiv.innerHTML = `
-          <button class="btn btn-secondary"><i class="fa-solid fa-video"></i>예약 완료</button>
-          <button class="btn btn-outline"><i class="fa-solid fa-pen-to-square"></i> 일지 작성</button>
-        `;
-        updatePendingCount();
-      }
-    }
+    const id = card.dataset.id;
 
-    if (rejectBtn) {
-      const card = rejectBtn.closest('.appointment-card');
-      if (card && confirm('정말 이 예약을 반려하시겠습니까?')) {
-        card.remove();
-        updatePendingCount();
+    try {
+      if (approveBtn) {
+        approveBtn.disabled = true;
+        await apiFetch(`/api/reservations/${id}/approve`, { method: 'POST' });
+      } else {
+        const reason = prompt('반려 사유를 입력해 주세요. (선택)');
+        if (reason === null) return;
+        rejectBtn.disabled = true;
+        await apiFetch(`/api/reservations/${id}/reject`, {
+          method: 'POST',
+          body: JSON.stringify({ reason }),
+        });
       }
+      await Promise.all([fetchAppointmentsFromAPI(), loadMonth()]);
+    } catch (error) {
+      alert(error.message);
+      if (approveBtn) approveBtn.disabled = false;
+      if (rejectBtn) rejectBtn.disabled = false;
     }
   });
 }
 
 function updatePendingCount() {
-  const pendingCards = document.querySelectorAll('.appointment-card.pending');
   const pendingBadge = document.querySelector('.pending-count');
   if (pendingBadge) {
-    pendingBadge.textContent = `대기 ${pendingCards.length}건`;
+    pendingBadge.textContent = `대기 ${appointments.filter(STATUS_FILTERS['대기']).length}건`;
   }
 }
 
-function filterAppointments(filterText) {
-  const cards = document.querySelectorAll('.appointment-card');
-  cards.forEach(card => {
-    if (filterText.includes('전체')) {
-      card.style.display = 'flex';
-    } else if (filterText.includes('대기') && card.classList.contains('pending')) {
-      card.style.display = 'flex';
-    } else if (filterText.includes('확정') && card.classList.contains('confirmed')) {
-      card.style.display = 'flex';
-    } else if (filterText.includes('취소') || filterText.includes('반려')) {
-      card.style.display = card.classList.contains('rejected') ? 'flex' : 'none';
+function renderAppointments() {
+  const list = document.querySelector('.appointment-list');
+  if (!list) return;
+
+  updatePendingCount();
+
+  const items = appointments.filter(STATUS_FILTERS[currentFilter]);
+  if (items.length === 0) {
+    list.innerHTML = '<p class="appt-topic">표시할 상담 신청이 없습니다.</p>';
+    return;
+  }
+
+  list.innerHTML = items.map(appt => {
+    const cardClass = appt.status === 'cancelled' ? 'rejected' : appt.status;
+    const isOnline = appt.consult_type === 'online';
+    let actions = '';
+    let topicLabel = '상담 안건';
+    let topic = appt.topic;
+
+    if (appt.status === 'pending') {
+      actions = `
+        <button class="btn btn-approve"><i class="fa-solid fa-check"></i> 예약 승인</button>
+        <button class="btn btn-reject"><i class="fa-solid fa-xmark"></i> 반려</button>`;
+    } else if (appt.status === 'confirmed') {
+      actions = `<button class="btn btn-secondary" disabled><i class="fa-solid fa-circle-check"></i> 예약 완료</button>`;
+    } else if (appt.status === 'rejected') {
+      actions = '<span class="status-waiting-badge">반려됨</span>';
+      if (appt.reject_reason) {
+        topicLabel = '반려 사유';
+        topic = appt.reject_reason;
+      }
     } else {
-      card.style.display = 'none';
+      actions = '<span class="status-waiting-badge">학생이 취소함</span>';
     }
-  });
+
+    return `
+      <div class="appointment-card ${cardClass}" data-id="${appt.id}">
+        <div class="appt-status-bar"></div>
+        <div class="appt-main">
+          <div class="appt-user">
+            <div class="user-avatar">${escapeHtml(appt.student_name.charAt(0))}</div>
+            <div class="user-meta">
+              <h4>${escapeHtml(appt.student_name)}</h4>
+              <span class="appt-type${isOnline ? ' online' : ''}">${isOnline ? '화상 상담' : '방문 상담'}</span>
+            </div>
+          </div>
+          <div class="appt-time">
+            <i class="fa-regular fa-clock"></i> ${formatSlotRange(appt.start_at, appt.end_at)}
+          </div>
+          <p class="appt-topic"><strong>${topicLabel}:</strong> ${escapeHtml(topic)}</p>
+          <div class="appt-actions">${actions}</div>
+        </div>
+      </div>`;
+  }).join('');
 }
 
-function createNewTimeslot() {
+async function createNewTimeslot(createBtn) {
   const dateInput = document.querySelector('.modal-form input[type="date"]').value;
   const startTime = document.querySelectorAll('.modal-form input[type="time"]')[0].value;
   const endTime = document.querySelectorAll('.modal-form input[type="time"]')[1].value;
   const type = document.querySelector('.modal-form select').value;
+  const note = document.querySelector('.modal-form textarea').value;
 
-  const payload = {
-    date: dateInput,
-    start_time: startTime,
-    end_time: endTime,
-    counseling_type: type
-  };
+  if (!dateInput || !startTime || !endTime) {
+    alert('날짜와 시간을 모두 입력해 주세요.');
+    return;
+  }
 
+  // 입력한 로컬 시간을 시간대가 포함된 ISO 문자열로 변환
+  const startAt = new Date(`${dateInput}T${startTime}`);
+  const endAt = new Date(`${dateInput}T${endTime}`);
 
+  createBtn.disabled = true;
+  try {
+    await apiFetch('/api/reservations/timeslots', {
+      method: 'POST',
+      body: JSON.stringify({
+        start_at: startAt.toISOString(),
+        end_at: endAt.toISOString(),
+        counseling_type: type,
+        note,
+      }),
+    });
 
-  alert(`[임시] ${dateInput} (${startTime} ~ ${endTime}) 타임슬롯이 오픈되었습니다.`);
-  document.getElementById('schedule-modal').style.display = 'none';
+    document.getElementById('schedule-modal').style.display = 'none';
+    document.querySelector('.modal-form textarea').value = '';
+    selectedDate = startAt;
+    currentDate = new Date(startAt);
+    await loadMonth();
+  } catch (error) {
+    alert(error.message);
+  } finally {
+    createBtn.disabled = false;
+  }
 }
 
-function fetchTimeslotsForDate(year, month, day) {
-  
+async function fetchAppointmentsFromAPI() {
+  try {
+    appointments = await apiFetch('/api/reservations');
+  } catch (error) {
+    appointments = [];
+    console.error('예약 목록 로드 오류:', error);
+  }
+  renderAppointments();
 }
 
-function fetchAppointmentsFromAPI() {
-  
+async function fetchUserName() {
+  try {
+    const user = await apiFetch('/api/users/me');
+    document.querySelector('.user-profile .name').textContent = `${user.username} 선생님`;
+  } catch (error) {
+    console.error('사용자 정보 로드 오류:', error);
+  }
 }

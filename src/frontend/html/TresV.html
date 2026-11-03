@@ -71,14 +71,7 @@
               <div class="weekdays">
                 <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
               </div>
-              <div class="days">
-                <span class="prev-month">27</span><span class="prev-month">28</span><span class="prev-month">29</span><span class="prev-month">30</span>
-                <span>1</span><span>2</span><span>3</span>
-                <span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
-                <span>11</span><span>12</span><span class="day active-day">13</span><span>14</span><span class="day has-event">15</span><span>16</span><span>17</span>
-                <span class="day has-event">18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span>
-                <span>25</span><span>26</span><span>27</span><span>28</span><span>29</span><span>30</span><span class="next-month">1</span>
-              </div>
+              <div class="days"></div>
             </div>
 
             <hr class="divider">
@@ -100,72 +93,11 @@
           <div class="section-card">
             <div class="card-header">
               <h2><i class="fa-solid fa-clock-rotate-left"></i> 실시간 상담 신청 내역</h2>
-              <span class="pending-count">대기 3건</span>
+              <span class="pending-count">대기 0건</span>
             </div>
 
             <div class="appointment-list">
-              <div class="appointment-card pending">
-                <div class="appt-status-bar"></div>
-                <div class="appt-main">
-                  <div class="appt-user">
-                    <div class="user-avatar">박</div>
-                    <div class="user-meta">
-                      <h4>박도현 <span class="student-info">(2학년 3반 14번)</span></h4>
-                      <span class="appt-type">방문 상담</span>
-                    </div>
-                  </div>
-                  <div class="appt-time">
-                    <i class="fa-regular fa-clock"></i> 10월 15일 (목) 15:00 ~ 15:40
-                  </div>
-                  <p class="appt-topic"><strong>상담 안건:</strong> 이공계학과 수시 전형 선택 및 생기부 점검</p>
-                  <div class="appt-actions">
-                    <button class="btn btn-approve"><i class="fa-solid fa-check"></i> 예약 승인</button>
-                    <button class="btn btn-reject"><i class="fa-solid fa-xmark"></i> 반려</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="appointment-card confirmed">
-                <div class="appt-status-bar"></div>
-                <div class="appt-main">
-                  <div class="appt-user">
-                    <div class="user-avatar">김</div>
-                    <div class="user-meta">
-                      <h4>김민준 <span class="student-info">(2학년 3반 05번)</span></h4>
-                      <span class="appt-type online">화상 상담 (Google Meet)</span>
-                    </div>
-                  </div>
-                  <div class="appt-time">
-                    <i class="fa-regular fa-clock"></i> 10월 13일 (화) 10:00 ~ 10:40
-                  </div>
-                  <p class="appt-topic"><strong>상담 안건:</strong> 컴퓨터공학과 자소서 첨삭 및 포트폴리오 질문</p>
-                  <div class="appt-actions">
-                    <button class="btn btn-secondary"><i class="fa-solid fa-video"></i>예약 완료</button>
-                    <button class="btn btn-outline"><i class="fa-solid fa-pen-to-square"></i> 일지 작성</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="appointment-card pending">
-                <div class="appt-status-bar"></div>
-                <div class="appt-main">
-                  <div class="appt-user">
-                    <div class="user-avatar">최</div>
-                    <div class="user-meta">
-                      <h4>최지우 <span class="student-info">(2학년 3반 28번)</span></h4>
-                      <span class="appt-type">방문 상담</span>
-                    </div>
-                  </div>
-                  <div class="appt-time">
-                    <i class="fa-regular fa-clock"></i> 10월 18일 (일) 14:00 ~ 14:40
-                  </div>
-                  <p class="appt-topic"><strong>상담 안건:</strong> 문/이과 계열 전환 상담 및 적성검사 결과 검토</p>
-                  <div class="appt-actions">
-                    <button class="btn btn-approve"><i class="fa-solid fa-check"></i> 예약 승인</button>
-                    <button class="btn btn-reject"><i class="fa-solid fa-xmark"></i> 반려</button>
-                  </div>
-                </div>
-              </div>
+              <!-- API로 가져온 예약 카드가 생성될 영역 -->
             </div>
           </div>
         </section>
