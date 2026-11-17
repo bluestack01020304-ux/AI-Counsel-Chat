@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>곰곰이 진로 센터 - 학생 상담 예약 신청</title>
+  <title>상담 예약 신청 | 경기자동차과학고등학교 곰곰이</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="../css/TresV.css">
   <link rel="stylesheet" href="../css/resV.css">
@@ -18,19 +18,24 @@
           <span>진로 상담 센터</span>
         </div>
       </div>
+      <div class="school-badge">
+        <i class="fa-solid fa-school"></i>
+        <span>경기자동차과학고등학교</span>
+      </div>
 
       <button class="new-chat-btn" id="open-booking-modal-btn">
-        <i class="fa-solid fa-calendar-plus"></i> 빠른 예약 신청
+        <i class="fa-solid fa-calendar-plus"></i>예약 신청
       </button>
 
       <div class="chat-history">
         <div class="history-group">
           <span class="group-title">내 예약 상태 필터</span>
           <ul class="filter-list">
-            <li class="active"><i class="fa-solid fa-list-check"></i> 전체 신청 (3)</li>
-            <li><i class="fa-solid fa-clock"></i> 승인 대기 중 (1)</li>
-            <li><i class="fa-solid fa-circle-check"></i> 확정된 상담 (1)</li>
-            <li><i class="fa-solid fa-circle-xmark"></i> 취소/반려 (1)</li>
+            <li class="active" data-filter="all"><i class="fa-solid fa-list-check"></i> 전체 신청 (4)</li>
+            <li data-filter="pending"><i class="fa-solid fa-clock"></i> 승인 대기 중 (1)</li>
+            <li data-filter="confirmed"><i class="fa-solid fa-circle-check"></i> 확정된 상담 (1)</li>
+            <li data-filter="rejected"><i class="fa-solid fa-circle-xmark"></i> 취소/반려 (1)</li>
+            <li data-filter="completed"><i class="fa-solid fa-flag-checkered"></i> 상담 완료 (1)</li>
           </ul>
         </div>
       </div>
@@ -46,7 +51,6 @@
       </div>
     </aside>
 
-    <!-- 메인 컨텐츠 영역 -->
     <main class="main-content">
       <header class="top-header">
         <div class="header-title">
@@ -58,10 +62,8 @@
         </div>
       </header>
 
-      <!-- 2열 메인 레이아웃 (달력 & 내 신청 목록) -->
       <div class="schedule-container">
         
-        <!-- 왼쪽: 달력 및 선생님 상담 가능 시간 선택 -->
         <section class="calendar-section">
           <div class="section-card">
             <div class="calendar-header">
@@ -73,7 +75,6 @@
               </div>
             </div>
 
-            <!-- 월간 미니 달력 -->
             <div class="mini-calendar">
               <div class="weekdays">
                 <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
@@ -90,7 +91,6 @@
 
             <hr class="divider">
 
-            <!-- 선택된 날짜의 오픈된 타임슬롯 -->
             <div class="timeslot-management">
               <div class="timeslot-header">
                 <h3>10월 13일 (화) 신청 가능 시간</h3>
@@ -118,7 +118,6 @@
           </div>
         </section>
 
-        <!-- 오른쪽: 내가 신청한 예약 내역 및 현황 -->
         <section class="appointments-section">
           <div class="section-card">
             <div class="card-header">
@@ -127,7 +126,6 @@
             </div>
 
             <div class="appointment-list">
-              <!-- 내 예약 카드 1: 확정됨 -->
               <div class="appointment-card confirmed">
                 <div class="appt-status-bar"></div>
                 <div class="appt-main">
@@ -149,7 +147,6 @@
                 </div>
               </div>
 
-              <!-- 내 예약 카드 2: 승인 대기 중 -->
               <div class="appointment-card pending">
                 <div class="appt-status-bar"></div>
                 <div class="appt-main">
@@ -171,7 +168,6 @@
                 </div>
               </div>
 
-              <!-- 내 예약 카드 3: 반려됨 -->
               <div class="appointment-card rejected">
                 <div class="appt-status-bar"></div>
                 <div class="appt-main">
@@ -189,6 +185,27 @@
                 </div>
               </div>
 
+              <div class="appointment-card completed">
+                <div class="appt-status-bar"></div>
+                <div class="appt-main">
+                  <div class="appt-user">
+                    <div class="user-avatar"><i class="fa-solid fa-chalkboard-user"></i></div>
+                    <div class="user-meta">
+                      <h4>박진로 선생님 <span class="student-info">(담임 교사)</span></h4>
+                      <span class="appt-type">방문 상담</span>
+                    </div>
+                  </div>
+                  <div class="appt-time">
+                    <i class="fa-regular fa-clock"></i> 10월 06일 (화) 16:00 ~ 16:40
+                  </div>
+                  <p class="appt-topic"><strong>상담 안건:</strong> 컴퓨터공학과 진학을 위한 1차 진로 상담</p>
+                  <div class="appt-actions">
+                    <span class="completed-badge"><i class="fa-solid fa-flag-checkered"></i> 상담 완료</span>
+                    <button class="btn btn-primary" onclick="location.href='counselNote.html?id=1'"><i class="fa-regular fa-comment-dots"></i> 선생님 후기 보기</button>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </section>
@@ -197,7 +214,6 @@
     </main>
   </div>
 
-  <!-- 학생용 예약 신청 입력 모달 -->
   <div class="modal-backdrop" id="booking-modal" style="display: none;">
     <div class="modal-content">
       <div class="modal-header">
@@ -230,6 +246,33 @@
       <div class="modal-footer">
         <button class="btn btn-outline modal-close-btn">취소</button>
         <button class="btn btn-primary" id="submit-booking-btn">예약 신청 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="cancel-modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fa-regular fa-calendar-xmark"></i> 상담 취소</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="cancel-guide" id="cancel-guide"></p>
+        <div class="form-group">
+          <label>취소 사유 <span style="color: #ef4444;">*</span></label>
+          <div class="cancel-reasons" id="cancel-reasons">
+            <label><input type="radio" name="cancel-reason" value="일정이 맞지 않아요"> 일정이 맞지 않아요</label>
+            <label><input type="radio" name="cancel-reason" value="고민이 해결됐어요"> 고민이 해결됐어요</label>
+            <label><input type="radio" name="cancel-reason" value="상담 내용을 더 준비하고 싶어요"> 상담 내용을 더 준비하고 싶어요</label>
+            <label><input type="radio" name="cancel-reason" value="몸이 좋지 않아요"> 몸이 좋지 않아요</label>
+            <label><input type="radio" name="cancel-reason" value="etc"> 기타 (직접 입력)</label>
+          </div>
+          <input type="text" id="cancel-reason-etc" placeholder="취소 사유를 입력해주세요" maxlength="100" hidden>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost modal-close-btn">돌아가기</button>
+        <button class="btn btn-reject" id="confirm-cancel-btn">취소하기</button>
       </div>
     </div>
   </div>

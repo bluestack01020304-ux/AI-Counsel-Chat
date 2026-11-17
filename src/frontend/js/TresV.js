@@ -79,6 +79,13 @@ function renderCalendar(date) {
       span.classList.add('day');
     }
 
+    if (isWeekend(new Date(year, month, i))) {
+      span.classList.add('weekend');
+      span.title = '주말에는 상담을 운영하지 않아요';
+      daysContainer.appendChild(span);
+      continue;
+    }
+
     span.addEventListener('click', () => {
       document.querySelectorAll('.mini-calendar .days span').forEach(el => {
         el.classList.remove('active-day');
@@ -168,6 +175,42 @@ function initAppointmentActions() {
   appointmentList.addEventListener('click', (e) => {
     const approveBtn = e.target.closest('.btn-approve');
     const rejectBtn = e.target.closest('.btn-reject');
+    const completeBtn = e.target.closest('.complete-btn');
+    const unconfirmBtn = e.target.closest('.unconfirm-btn');
+
+    if (unconfirmBtn) {
+      const card = unconfirmBtn.closest('.appointment-card');
+      if (card && confirm('예약 승인을 취소하고 승인 대기 상태로 되돌릴까요?')) {
+        card.classList.remove('confirmed');
+        card.classList.add('pending');
+        card.querySelector('.appt-actions').innerHTML = `
+          <button class="btn btn-approve"><i class="fa-solid fa-check"></i> 예약 승인</button>
+          <button class="btn btn-reject"><i class="fa-solid fa-xmark"></i> 반려</button>
+        `;
+        updatePendingCount();
+      }
+      return;
+    }
+    const writeNoteBtn = e.target.closest('.write-note-btn');
+
+    if (writeNoteBtn) {
+      const recordId = writeNoteBtn.dataset.recordId;
+      window.location.href = recordId ? `counselNote.html?id=${recordId}` : 'counselNote.html';
+      return;
+    }
+
+    if (completeBtn) {
+      const card = completeBtn.closest('.appointment-card');
+      if (card && confirm('상담을 완료 처리할까요? 완료된 상담에는 후기를 남길 수 있어요.')) {
+        card.classList.remove('confirmed');
+        card.classList.add('completed');
+        card.querySelector('.appt-actions').innerHTML = `
+          <span class="completed-badge"><i class="fa-solid fa-flag-checkered"></i> 상담 완료</span>
+          <button class="btn btn-primary write-note-btn"><i class="fa-solid fa-pen-to-square"></i> 후기 남기기</button>
+        `;
+      }
+      return;
+    }
 
     if (approveBtn) {
       const card = approveBtn.closest('.appointment-card');
@@ -177,8 +220,8 @@ function initAppointmentActions() {
         
         const actionsDiv = card.querySelector('.appt-actions');
         actionsDiv.innerHTML = `
-          <button class="btn btn-secondary"><i class="fa-solid fa-video"></i>예약 완료</button>
-          <button class="btn btn-outline"><i class="fa-solid fa-pen-to-square"></i> 일지 작성</button>
+          <button class="btn btn-secondary unconfirm-btn" title="다시 누르면 승인 대기로 되돌려요"><i class="fa-solid fa-video"></i>예약 완료</button>
+          <button class="btn btn-outline complete-btn"><i class="fa-solid fa-flag-checkered"></i> 상담 완료 처리</button>
         `;
         updatePendingCount();
       }
@@ -213,6 +256,8 @@ function filterAppointments(filterText) {
       card.style.display = 'flex';
     } else if (filterText.includes('취소') || filterText.includes('반려')) {
       card.style.display = card.classList.contains('rejected') ? 'flex' : 'none';
+    } else if (filterText.includes('완료')) {
+      card.style.display = card.classList.contains('completed') ? 'flex' : 'none';
     } else {
       card.style.display = 'none';
     }
@@ -224,6 +269,11 @@ function createNewTimeslot() {
   const startTime = document.querySelectorAll('.modal-form input[type="time"]')[0].value;
   const endTime = document.querySelectorAll('.modal-form input[type="time"]')[1].value;
   const type = document.querySelector('.modal-form select').value;
+
+  if (isWeekend(new Date(`${dateInput}T00:00:00`))) {
+    alert('주말에는 상담 시간을 열 수 없어요. 평일 날짜를 선택해주세요.');
+    return;
+  }
 
   const payload = {
     date: dateInput,

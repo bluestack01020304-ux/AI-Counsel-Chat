@@ -1,4 +1,3 @@
-/* 기본 스타일 초기화 */
 * {
   margin: 0;
   padding: 0;
@@ -7,98 +6,248 @@
 
 body {
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
-  background-color: #f4f6f8;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(59, 130, 246, 0.12), transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(200, 106, 36, 0.10), transparent 40%),
+    #f4f6f9;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  padding: 24px 16px;
 }
 
-/* 로그인 카드 용기 */
-.card {
-  background-color: #ffffff;
-  padding: 40px 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+.login-wrap {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
   width: 100%;
-  max-width: 380px;
-  text-align: center;
+  max-width: 860px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
 }
 
-/* 타이틀 */
-.card h1 {
+.brand-panel {
+  position: relative;
+  padding: 48px 40px;
+  color: #ffffff;
+  background: linear-gradient(145deg, #1e3a8a 0%, #1e293b 100%);
+  overflow: hidden;
+}
+
+.brand-panel::after {
+  content: '';
+  position: absolute;
+  right: -60px;
+  bottom: -60px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 28px solid rgba(255, 255, 255, 0.05);
+}
+
+.school-emblem {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background-color: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 24px;
-  color: #333333;
-  margin-bottom: 28px;
-  font-weight: 700;
+  margin-bottom: 20px;
 }
 
-/* 폼 레이아웃 */
+.school-name {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #bfdbfe;
+  margin-bottom: 8px;
+}
+
+.brand-panel h1 {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 14px;
+}
+
+.brand-desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #cbd5e1;
+  margin-bottom: 28px;
+}
+
+.brand-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.brand-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #e2e8f0;
+}
+
+.brand-features i {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.card {
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card h2 {
+  font-size: 22px;
+  color: #0f172a;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.card-desc {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 24px;
+}
+
 #loginForm {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* 학생/교사 선택 */
 .role-tabs {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  background-color: #f1f5f9;
+  border-radius: 10px;
   margin-bottom: 4px;
-  font-size: 14px;
-  color: #555555;
 }
 
 .role-tabs label {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
+  padding: 9px 0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
   cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
 }
 
-/* 오류 메시지 */
-#login-message {
-  color: #e5484d;
-  font-size: 13px;
+.role-tabs input {
+  display: none;
 }
 
-/* 입력 필드 (아이디, 비밀번호) */
+.role-tabs label:has(input:checked) {
+  background-color: #ffffff;
+  color: #1e3a8a;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.1);
+}
+
+.input-field {
+  position: relative;
+}
+
+.input-field i {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 14px;
+}
+
 #loginForm input[type="text"],
 #loginForm input[type="password"] {
   width: 100%;
-  padding: 12px 14px;
+  padding: 13px 14px 13px 40px;
   font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 #loginForm input:focus {
-  border-color: #4A90E2;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
-/* 로그인 버튼 */
+#login-message {
+  color: #e5484d;
+  font-size: 13px;
+}
+
 #loginForm button {
   width: 100%;
-  padding: 13px;
+  padding: 14px;
   margin-top: 8px;
-  background-color: #4A90E2;
+  background-color: #1e3a8a;
   color: #ffffff;
   font-size: 15px;
   font-weight: 600;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
 #loginForm button:hover {
-  background-color: #357ABD;
+  background-color: #1e40af;
 }
 
 #loginForm button:active {
-  background-color: #2A629A;
+  background-color: #172554;
+}
+
+#loginForm button:disabled {
+  background-color: #94a3b8;
+  cursor: wait;
+}
+
+.card-footer {
+  margin-top: 28px;
+  font-size: 12px;
+  color: #94a3b8;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .login-wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-panel,
+  .card {
+    padding: 32px 24px;
+  }
+
+  .brand-features {
+    display: none;
+  }
 }
