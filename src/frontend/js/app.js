@@ -37,25 +37,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      if (response.status === 401) {
-        logout();
-        return;
-      }
-      if (!response.ok) throw new Error('유저 정보 조회 실패');
+  const token = localStorage.getItem("access_token");
+  if (!token) {
+    window.location.href = "../html/login.html";
+    return;
+  }
 
-      const userData = await response.json();
-      const userName = userData.name || userData.username || '사용자';
-      const userDesc = userData.desc || userData.grade || '고등학교 2학년';
+  let currentSessionId = null;
 
       document.getElementById('user-name').textContent = userName;
       document.getElementById('user-desc').textContent = userDesc;
       document.getElementById('welcome-title').textContent = `안녕하세요, ${userName}님!`;
 
-    } catch (error) {
-      console.error('사용자 정보 로드 오류:', error);
-      document.getElementById('user-name').textContent = '사용자';
-      document.getElementById('welcome-title').textContent = '안녕하세요!';
+    if (response.status === 401) {
+      localStorage.removeItem("access_token");
+      window.location.href = "../html/login.html";
     }
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.detail || '서버 응답 오류');
+    return data;
   }
 
   async function fetchChatrooms() {
@@ -127,25 +128,55 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingMessageEl = appendMessage('ai', '곰곰이가 대답을 생각하고 있어요... 🐻');
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/chat/ask`, {
+      if (!currentSessionId) {
+        const room = await api('/chatrooms/createRoom', {
+          method: 'POST',
+          body: JSON.stringify({ title: question })
+        });
+        currentSessionId = room.session_id;
+        currentChatTitle = room.title;
+        addChatHistory(room.title, room.session_id);
+      }
+
+      const data = await api('/ask', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ question })
+        body: JSON.stringify({ question: question, session_id: currentSessionId })
       });
 
-      if (!response.ok) throw new Error('서버 응답 오류');
-
-      const data = await response.json();
       loadingMessageEl.innerText = data.answer;
       messages.push({ role: 'ai', content: data.answer });
 
     } catch (error) {
       console.error('오류 발생:', error);
-      console.error("오류 종류:", error.name);
-      console.error("오류 메시지:", error.message);
-      loadingMessageEl.innerText = "서버 연결에 실패했습니다. (백엔드 서버를 확인하세요)";
+      loadingMessageEl.innerText = error instanceof TypeError
+        ? "서버 연결에 실패했습니다. (백엔드 서버를 확인하세요)"
+        : error.message;
+    }
+  }
+
+  async function openChat(sessionId) {
+    try {
+      const room = await api(`/chatrooms/${sessionId}`);
+
+      startNewChat();
+      currentSessionId = room.session_id;
+      currentChatTitle = room.title;
+
+      if (recommendWrapper) recommendWrapper.style.display = 'none';
+      chatMessages.style.display = 'flex';
+      room.messages.forEach((m) => appendMessage(m.sender, m.message));
+    } catch (error) {
+      console.error('채팅방 불러오기 실패:', error);
+    }
+  }
+
+  async function loadChatList() {
+    try {
+      const rooms = await api('/chatrooms');
+      // addChatHistory가 맨 위에 추가하므로 오래된 방부터
+      rooms.reverse().forEach((room) => addChatHistory(room.title, room.session_id));
+    } catch (error) {
+      console.error('채팅 목록 불러오기 실패:', error);
     }
   }
 

@@ -35,3 +35,4 @@ def get_context(question):
 from ..services.ai_service import chat, init
 
 init()
+
