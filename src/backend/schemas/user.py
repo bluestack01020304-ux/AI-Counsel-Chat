@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
 class UserResponse(BaseModel):
+    userid: str
     username: str
-    #추가 정보
+    role: str

@@ -1,0 +1,160 @@
+body {
+  font-family: 'Pretendard', sans-serif;
+  background-color: #f8fafc;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.guide-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background-color: #fbbf24;
+  color: #451a03;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.guide-edit-btn[hidden] {
+  display: none;
+}
+
+.guide-edit-btn:hover {
+  background-color: #f59e0b;
+}
+
+.guide-updated-at {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #c7d2fe;
+}
+
+body.guide-editing main .hidden {
+  display: block !important;
+}
+
+body.guide-editing main {
+  outline: 2px dashed #fbbf24;
+  outline-offset: 12px;
+  border-radius: 12px;
+  padding-bottom: 120px;
+}
+
+body.guide-editing main:focus {
+  outline-color: #f59e0b;
+}
+
+body.guide-editing main p:hover,
+body.guide-editing main li:hover,
+body.guide-editing main h2:hover,
+body.guide-editing main h3:hover,
+body.guide-editing main span:hover {
+  background-color: rgba(251, 191, 36, 0.12);
+  border-radius: 4px;
+  cursor: text;
+}
+
+body.guide-editing #guide-nav,
+body.guide-editing #guide-edit-btn {
+  visibility: hidden;
+}
+
+.guide-edit-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  background-color: #0f172a;
+  color: #e2e8f0;
+  box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.25);
+}
+
+.guide-edit-bar[hidden] {
+  display: none;
+}
+
+.guide-edit-bar-inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 14px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.guide-edit-bar-inner i {
+  color: #fbbf24;
+  margin-right: 6px;
+}
+
+.guide-edit-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.guide-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.guide-btn-text {
+  color: #94a3b8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.guide-btn-text:hover {
+  color: #f1f5f9;
+}
+
+.guide-btn-ghost {
+  background-color: #1e293b;
+  color: #e2e8f0;
+}
+
+.guide-btn-ghost:hover {
+  background-color: #334155;
+}
+
+.guide-btn-primary {
+  background-color: #fbbf24;
+  color: #451a03;
+}
+
+.guide-btn-primary:hover {
+  background-color: #f59e0b;
+}
+
+.guide-btn-primary i {
+  color: inherit;
+}

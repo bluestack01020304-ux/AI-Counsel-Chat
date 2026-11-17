@@ -1,23 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // DOM 요소 선택
   const newRecordBtn = document.getElementById('new-record-btn');
   const studentList = document.getElementById('student-list');
   const searchInput = document.getElementById('student-search-input');
   const searchBtn = document.getElementById('search-btn');
-  const logoutBtn = document.getElementById('logout-btn');
   const recommendCards = document.querySelectorAll('.recommend-card');
+  const recordTableBody = document.getElementById('record-table-body');
 
-  // 1. 새로운 상담 일지 작성 클릭 이벤트
+  recordTableBody.addEventListener('click', (e) => {
+    const row = e.target.closest('tr[data-record-id]');
+    if (row) window.location.href = `counselNote.html?id=${row.dataset.recordId}`;
+  });
+
   newRecordBtn.addEventListener('click', () => {
     alert('새 상담 일지 작성 창을 엽니다.');
   });
 
-  // 2. 학생 목록 선택 처리
   studentList.addEventListener('click', (e) => {
     const li = e.target.closest('li');
     if (!li) return;
 
-    // 기존 활성화 항목 해제 후 클릭 항목 활성화
     document.querySelectorAll('#student-list li').forEach(item => {
       item.classList.remove('active');
     });
@@ -27,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
     alert(`${studentName} 학생의 진로 상세 정보 페이지로 이동합니다.`);
   });
 
-  // 3. 학생/키워드 검색 기능
   function handleSearch() {
     const query = searchInput.value.trim();
     if (query) {
@@ -44,18 +44,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 4. 업무 추천 카드 클릭 이벤트
+  const cardPages = {
+    '수시/정시 진학 가이드': 'jinhak.html',
+    '상담 일정 및 예약 관리': 'TresV.html',
+  };
+
   recommendCards.forEach(card => {
+    card.style.cursor = 'pointer';
     card.addEventListener('click', () => {
       const cardTitle = card.querySelector('.card-text h3').textContent;
-      alert(`'${cardTitle}' 기능 페이지로 연결합니다.`);
+      if (cardPages[cardTitle]) {
+        window.location.href = cardPages[cardTitle];
+      } else {
+        alert(`'${cardTitle}' 기능은 준비 중입니다.`);
+      }
     });
-  });
-
-  // 5. 로그아웃 버튼
-  logoutBtn.addEventListener('click', () => {
-    if (confirm('로그아웃 하시겠습니까?')) {
-      alert('로그아웃 되었습니다.');
-    }
   });
 });

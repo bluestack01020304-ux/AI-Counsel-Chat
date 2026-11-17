@@ -2,20 +2,54 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>곰곰이 AI - 로그인</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인 | 경기자동차과학고등학교 곰곰이</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="../css/login.css" />
-</head> 
+</head>
 <body>
 
-  <div class="card">
-    <h1>곰곰이</h1>
+  <main class="login-wrap">
+    <section class="brand-panel">
+      <div class="school-emblem">
+        <i class="fa-solid fa-car-side"></i>
+      </div>
+      <p class="school-name">경기자동차과학고등학교</p>
+      <h1>곰곰이 진로 상담 센터 🐻</h1>
+      <p class="brand-desc">
+        나에게 맞는 진로와 진학을 함께 고민하는<br>
+        우리 학교 AI 진로 상담 공간이에요.
+      </p>
+      <ul class="brand-features">
+        <li><i class="fa-regular fa-comments"></i> AI 진로 상담</li>
+        <li><i class="fa-regular fa-calendar-check"></i> 선생님 상담 예약</li>
+        <li><i class="fa-solid fa-microphone-lines"></i> 실전 면접 대비</li>
+      </ul>
+    </section>
 
-    <form id="loginForm">
-      <input type="text" id="email" name="username" placeholder="아이디" autocomplete="username" required />
-      <input type="password" id="password" placeholder="비밀번호" required />
-      <button type="submit">로그인</button>
-    </form>
-  </div>
+    <section class="card">
+      <h2>로그인</h2>
+      <p class="card-desc">학교에서 받은 아이디로 로그인해주세요.</p>
+
+      <form id="loginForm">
+        <div class="role-tabs">
+          <label><input type="radio" name="role" value="students" checked /> <i class="fa-solid fa-user-graduate"></i> 학생</label>
+          <label><input type="radio" name="role" value="teachers" /> <i class="fa-solid fa-chalkboard-user"></i> 교사</label>
+        </div>
+        <div class="input-field">
+          <i class="fa-regular fa-user"></i>
+          <input type="text" id="username" placeholder="아이디" autocomplete="username" required />
+        </div>
+        <div class="input-field">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="password" placeholder="비밀번호" autocomplete="current-password" required />
+        </div>
+        <button type="submit">로그인</button>
+      </form>
+
+      <p class="card-footer">© 경기자동차과학고등학교 진로진학부</p>
+    </section>
+  </main>
 
   <script src="../js/login.js"></script>
 </body>
