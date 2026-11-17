@@ -1,4 +1,3 @@
-/* 학생용 신청 가능 슬롯 호버 및 선택 효과 */
 .timeslot-chip.student-selectable {
   cursor: pointer;
   transition: all 0.2s ease;
@@ -13,7 +12,6 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* 반려된 예약 카드 스타일 */
 .appointment-card.rejected {
   background-color: #fef2f2;
   border-color: #fecaca;
@@ -23,7 +21,65 @@
   background-color: #ef4444;
 }
 
-/* 대기 중 상태 표시 배지 */
+.modal-footer .btn-ghost {
+  background-color: #f1f5f9;
+  color: #475569;
+  padding: 8px 18px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.modal-footer .btn-ghost:hover {
+  background-color: #e2e8f0;
+  color: #1e293b;
+}
+
+#confirm-cancel-btn {
+  padding: 8px 18px;
+  transition: background-color 0.2s;
+}
+
+#confirm-cancel-btn:hover {
+  background-color: #dc2626;
+}
+
+.cancel-guide {
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 14px;
+}
+
+.cancel-reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cancel-reasons label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+}
+
+.cancel-reasons label:has(input:checked) {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.cancel-reasons input {
+  accent-color: #ef4444;
+}
+
+#cancel-reason-etc {
+  margin-top: 4px;
+}
+
 .status-waiting-badge {
   display: inline-flex;
   align-items: center;

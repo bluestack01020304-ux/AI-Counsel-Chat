@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>곰곰이 진로 라운지</title>
+  <title>진로 상담 라운지 | 경기자동차과학고등학교 곰곰이</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="../css/style.css">
 </head>
@@ -17,12 +17,21 @@
           <span>진로 상담 센터</span>
         </div>
       </div>
+      <div class="school-badge">
+        <i class="fa-solid fa-school"></i>
+        <span>경기자동차과학고등학교</span>
+      </div>
 
       <button class="new-chat-btn" id="new-chat-btn">
         <i class="fa-solid fa-pen"></i> 상담 새로 작성
       </button>
 
       <div class="chat-history">
+        <div class="history-group" hidden>
+          <span class="group-title"><i class="fa-solid fa-thumbtack"></i> 고정됨</span>
+          <ul id="pinned-list"></ul>
+        </div>
+
         <div class="history-group">
           <span class="group-title">최근 상담 목록</span>
           <ul id="chat-list"></ul>
@@ -73,7 +82,6 @@
           </div>
 
           <div class="card-grid" id="card-grid">
-            <!-- 상담 예약 카드 (클릭 시 이동) -->
             <div class="recommend-card" onclick="location.href='resV.html'" style="cursor: pointer;">
               <div class="card-icon"><i class="fa-regular fa-compass"></i></div>
               <div class="card-text">
@@ -82,7 +90,6 @@
               </div>
             </div>
 
-            <!-- 정시&수시 진학 가이드 카드 (클릭 시 이동) -->
             <div class="recommend-card" onclick="location.href='jinhak.html'" style="cursor: pointer;">
               <div class="card-icon"><i class="fa-solid fa-graduation-cap"></i></div>
               <div class="card-text">
@@ -98,10 +105,29 @@
                 <p>자주 나오는 질문 모음과 예상 답변</p>
               </div>
             </div>
+
+            <div class="recommend-card" id="past-chat-btn" style="cursor: pointer;">
+              <div class="card-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+              <div class="card-text">
+                <h3>지난 상담 보기</h3>
+                <p>예전에 곰곰이와 나눈 이야기 다시 보기</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
     </main>
+  </div>
+
+  <div class="modal-backdrop" id="past-chat-modal" hidden>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-clock-rotate-left"></i> 지난 상담 기록</h3>
+        <button class="modal-close-btn" id="past-chat-close">&times;</button>
+      </div>
+      <input type="text" class="past-chat-search" id="past-chat-search" placeholder="상담 제목으로 검색...">
+      <ul class="past-chat-list" id="past-chat-list"></ul>
+    </div>
   </div>
 
   <script src="../js/common.js"></script>

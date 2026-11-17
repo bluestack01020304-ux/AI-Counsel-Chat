@@ -1,34 +1,189 @@
 document.addEventListener('DOMContentLoaded', () => {
   initCalendar();
   initTimeslotSelect();
-  initBookingModal();
   initFilterEvents();
-  initAppointmentActions();
-  fetchUserName();
-  fetchMyTeachers();
-  fetchMyReservations();
+  initCancelEvents();
+  initBookingModal();
 });
 
-const STATUS_FILTERS = {
-  '전체': () => true,
-  '대기': (r) => r.status === 'pending',
-  '확정': (r) => r.status === 'confirmed',
-  '취소': (r) => r.status === 'rejected' || r.status === 'cancelled',
-};
+function updatePendingCount() {
+  const pendingBadge = document.querySelector('.pending-count');
+  if (pendingBadge) {
+    pendingBadge.textContent = `대기 ${document.querySelectorAll('.appointment-card.pending').length}건`;
+  }
+}
 
-const SLOT_BADGES = {
-  available: '<i class="fa-solid fa-plus"></i> 신청 가능',
-  mine: '내 예약 완료',
-  taken: '다른 학생 예약됨',
-  closed: '마감됨',
-};
+function initBookingModal() {
+  const modal = document.getElementById('booking-modal');
+  const openBtn = document.getElementById('open-booking-modal-btn');
+  const submitBtn = document.getElementById('submit-booking-btn');
+  const timeInput = document.getElementById('modal-selected-time');
+  const typeSelect = document.getElementById('modal-consult-type');
+  const topicInput = document.getElementById('modal-consult-topic');
+  let selectedChip = null;
 
-let currentDate = new Date();
-let selectedDate = new Date();
-let monthTimeslots = [];
-let reservations = [];
-let selectedSlot = null;
-let currentFilter = '전체';
+  function openModal(chip) {
+    selectedChip = chip || null;
+    topicInput.value = '';
+    modal.style.display = 'flex';
+    topicInput.focus();
+  }
+
+  function closeModal() {
+    modal.style.display = 'none';
+  }
+
+  openBtn.addEventListener('click', () => openModal());
+  document.querySelectorAll('.timeslot-chip.student-selectable').forEach(chip => {
+    chip.addEventListener('click', () => {
+      if (!chip.classList.contains('disabled')) openModal(chip);
+    });
+  });
+  modal.querySelectorAll('.modal-close-btn').forEach(btn => btn.addEventListener('click', closeModal));
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  submitBtn.addEventListener('click', () => {
+    const topic = topicInput.value.trim();
+    if (!topic) {
+      alert('상담 안건 및 고민 내용을 입력해주세요.');
+      topicInput.focus();
+      return;
+    }
+
+    const isOnline = typeSelect.value === 'online';
+    const card = document.createElement('div');
+    card.className = 'appointment-card pending';
+    card.innerHTML = `
+      <div class="appt-status-bar"></div>
+      <div class="appt-main">
+        <div class="appt-user">
+          <div class="user-avatar"><i class="fa-solid fa-chalkboard-user"></i></div>
+          <div class="user-meta">
+            <h4>박진로 선생님 <span class="student-info">(담임 교사)</span></h4>
+            <span class="appt-type${isOnline ? ' online' : ''}"></span>
+          </div>
+        </div>
+        <div class="appt-time"><i class="fa-regular fa-clock"></i> <span class="appt-time-text"></span></div>
+        <p class="appt-topic"><strong>상담 안건:</strong> <span class="appt-topic-text"></span></p>
+        <div class="appt-actions">
+          <span class="status-waiting-badge"><i class="fa-solid fa-hourglass-half"></i> 선생님 확인/승인 대기 중</span>
+          <button class="btn btn-outline cancel-btn"><i class="fa-solid fa-xmark"></i> 신청 취소</button>
+        </div>
+      </div>
+    `;
+    card.querySelector('.appt-type').textContent = typeSelect.options[typeSelect.selectedIndex].text;
+    card.querySelector('.appt-time-text').textContent = timeInput.value;
+    card.querySelector('.appt-topic-text').textContent = topic;
+    document.querySelector('.appointment-list').prepend(card);
+
+    if (selectedChip) {
+      selectedChip.classList.remove('available', 'student-selectable');
+      selectedChip.classList.add('disabled');
+      selectedChip.querySelector('.slot-badge').textContent = '내 신청 대기 중';
+    }
+
+    closeModal();
+    updatePendingCount();
+    applyFilter();
+    alert('상담 신청이 완료됐어요. 선생님이 승인하면 확정돼요.');
+  });
+}
+
+function initFilterEvents() {
+  const filterItems = document.querySelectorAll('.filter-list li');
+  filterItems.forEach(item => {
+    item.addEventListener('click', () => {
+      filterItems.forEach(li => li.classList.remove('active'));
+      item.classList.add('active');
+      applyFilter();
+    });
+  });
+}
+
+function applyFilter() {
+  const activeItem = document.querySelector('.filter-list li.active');
+  const filter = activeItem ? activeItem.dataset.filter : 'all';
+  document.querySelectorAll('.appointment-card').forEach(card => {
+    card.style.display = filter === 'all' || card.classList.contains(filter) ? 'flex' : 'none';
+  });
+}
+
+function initCancelEvents() {
+  const appointmentList = document.querySelector('.appointment-list');
+  if (!appointmentList) return;
+
+  const modal = document.getElementById('cancel-modal');
+  const guide = document.getElementById('cancel-guide');
+  const reasonBox = document.getElementById('cancel-reasons');
+  const etcInput = document.getElementById('cancel-reason-etc');
+  const confirmBtn = document.getElementById('confirm-cancel-btn');
+  let targetCard = null;
+
+  function closeModal() {
+    modal.style.display = 'none';
+    targetCard = null;
+  }
+
+  appointmentList.addEventListener('click', (e) => {
+    const cancelBtn = e.target.closest('.cancel-btn');
+    if (!cancelBtn) return;
+
+    targetCard = cancelBtn.closest('.appointment-card');
+    guide.textContent = targetCard.classList.contains('confirmed')
+      ? '확정된 상담을 취소하면 되돌릴 수 없어요. 취소 사유를 선택해주세요.'
+      : '상담 신청을 취소할까요? 취소 사유를 선택해주세요.';
+    reasonBox.querySelectorAll('input').forEach(radio => { radio.checked = false; });
+    etcInput.value = '';
+    etcInput.hidden = true;
+    modal.style.display = 'flex';
+  });
+
+  reasonBox.addEventListener('change', () => {
+    const selected = reasonBox.querySelector('input:checked');
+    etcInput.hidden = !selected || selected.value !== 'etc';
+    if (!etcInput.hidden) etcInput.focus();
+  });
+
+  modal.querySelectorAll('.modal-close-btn').forEach(btn => btn.addEventListener('click', closeModal));
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  confirmBtn.addEventListener('click', () => {
+    const selected = reasonBox.querySelector('input:checked');
+    if (!selected) {
+      alert('취소 사유를 선택해주세요.');
+      return;
+    }
+
+    const reason = selected.value === 'etc' ? etcInput.value.trim() : selected.value;
+    if (!reason) {
+      alert('취소 사유를 입력해주세요.');
+      etcInput.focus();
+      return;
+    }
+
+    targetCard.classList.remove('pending', 'confirmed');
+    targetCard.classList.add('rejected');
+
+    const topic = document.createElement('p');
+    topic.className = 'appt-topic';
+    topic.innerHTML = '<strong>취소 사유 (직접 취소):</strong> <span></span>';
+    topic.querySelector('span').textContent = reason;
+    targetCard.querySelector('.appt-actions').replaceWith(topic);
+
+    closeModal();
+    updatePendingCount();
+    applyFilter();
+  });
+}
+
+const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+
+let selectedDate = nextWeekday(new Date());
+let currentDate = new Date(selectedDate);
 
 function initCalendar() {
   loadMonth();
@@ -55,9 +210,10 @@ function initCalendar() {
 
   if (todayBtn) {
     todayBtn.addEventListener('click', () => {
-      currentDate = new Date();
-      selectedDate = new Date();
-      loadMonth();
+      selectedDate = nextWeekday(new Date());
+      currentDate = new Date(selectedDate);
+      renderCalendar(currentDate);
+      onDateSelect(selectedDate);
     });
   }
 }
@@ -114,7 +270,19 @@ function renderCalendar(date) {
     span.textContent = i;
     span.classList.add('day');
 
-    if (isSameDay(selectedDate, new Date(year, month, i))) {
+    if (isWeekend(new Date(year, month, i))) {
+      span.classList.add('weekend');
+      span.title = '주말에는 상담 예약을 받지 않아요';
+      daysContainer.appendChild(span);
+      continue;
+    }
+
+    const isSelected =
+      selectedDate.getFullYear() === year &&
+      selectedDate.getMonth() === month &&
+      selectedDate.getDate() === i;
+
+    if (isSelected) {
       span.classList.add('active-day');
     }
     if (eventDays.has(i)) {
@@ -152,29 +320,6 @@ function onDateSelect(date) {
   renderTimeslots(monthTimeslots.filter(slot => isSameDay(new Date(slot.start_at), date)));
 }
 
-function renderTimeslots(slots) {
-  const grid = document.getElementById('timeslot-grid');
-  if (!grid) return;
-
-  if (slots.length === 0) {
-    grid.innerHTML = '<div class="timeslot-chip disabled"><span class="time">선생님이 연 상담 시간이 없습니다</span></div>';
-    return;
-  }
-
-  grid.innerHTML = slots.map(slot => {
-    const time = `${formatTime(new Date(slot.start_at))} - ${formatTime(new Date(slot.end_at))}`;
-    const chipClass = slot.status === 'available' ? 'available student-selectable' : 'disabled';
-    const note = slot.note ? ` title="${escapeHtml(slot.note)}"` : '';
-
-    return `
-      <div class="timeslot-chip ${chipClass}" data-id="${slot.id}"${note}>
-        <span class="time">${time} · ${escapeHtml(slot.teacher_name)} 선생님</span>
-        <span class="slot-badge">${SLOT_BADGES[slot.status] || ''}</span>
-      </div>`;
-  }).join('');
-}
-
-// 신청 가능 슬롯 클릭 시 예약 신청서를 선택한 슬롯으로 채워서 엶
 function initTimeslotSelect() {
   const grid = document.getElementById('timeslot-grid');
   if (!grid) return;

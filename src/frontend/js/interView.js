@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const sendBtn = document.getElementById('interview-send-btn');
   const newInterviewBtn = document.getElementById('new-interview-btn');
   const historyList = document.getElementById('history-list');
+  const pinnedList = document.getElementById('pinned-list');
 
   const interviewTypes = {
     personality: {
@@ -144,13 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function addHistory(title) {
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <i class="fa-regular fa-folder"></i>
-      <span class="chat-title"></span>
-    `;
-    li.querySelector('.chat-title').textContent = title;
-    historyList.prepend(li);
+    addHistoryItem(title, historyList, pinnedList);
   }
 
   function startNewInterview() {

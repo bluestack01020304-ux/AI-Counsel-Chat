@@ -16,7 +16,6 @@ body {
   overflow: hidden;
 }
 
-/* ===== 사이드바 ===== */
 .sidebar {
   width: 280px;
   background-color: #1e293b;
@@ -30,7 +29,26 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 14px;
+}
+
+.school-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.22), rgba(59, 130, 246, 0.05));
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  color: #dbeafe;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+
+.school-badge i {
+  color: #60a5fa;
 }
 
 .logo-icon {
@@ -138,7 +156,6 @@ body {
   color: #94a3b8;
 }
 
-/* ===== 메인 영역 ===== */
 .main-content {
   flex: 1;
   display: flex;
@@ -183,7 +200,6 @@ body {
   cursor: pointer;
 }
 
-/* ===== 일정 및 예약 페이지 레이아웃 ===== */
 .schedule-container {
   display: grid;
   grid-template-columns: 380px 1fr;
@@ -201,7 +217,6 @@ body {
   box-shadow: 0 2px 8px rgba(0,0,0,0.02);
 }
 
-/* 달력 섹션 */
 .calendar-header {
   display: flex;
   justify-content: space-between;
@@ -261,6 +276,16 @@ body {
   color: #cbd5e1;
 }
 
+.mini-calendar .weekdays span:first-child,
+.mini-calendar .weekdays span:last-child {
+  color: #ef4444;
+}
+
+.mini-calendar .days .weekend {
+  color: #ef4444;
+  cursor: not-allowed;
+}
+
 .mini-calendar .days .active-day {
   background-color: #3b82f6;
   color: white;
@@ -289,7 +314,6 @@ body {
   margin: 20px 0;
 }
 
-/* 타임슬롯 섹션 */
 .timeslot-header {
   display: flex;
   justify-content: space-between;
@@ -345,7 +369,6 @@ body {
   font-weight: 600;
 }
 
-/* 예약 카드 목록 영역 */
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -393,6 +416,22 @@ body {
 
 .appointment-card.confirmed .appt-status-bar {
   background-color: #10b981;
+}
+
+.appointment-card.completed .appt-status-bar {
+  background-color: #64748b;
+}
+
+.completed-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #f1f5f9;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
 }
 
 .appt-main {
@@ -464,7 +503,6 @@ body {
   gap: 8px;
 }
 
-/* 버튼 공통 스타일 */
 .btn {
   border: none;
   padding: 8px 14px;
@@ -483,7 +521,6 @@ body {
 .btn-secondary { background-color: #4f46e5; color: white; }
 .btn-outline { background-color: transparent; border: 1px solid #cbd5e1; color: #475569; }
 
-/* ===== 모달 스타일 ===== */
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -520,6 +557,10 @@ body {
   font-size: 20px;
   color: #94a3b8;
   cursor: pointer;
+}
+
+.modal-footer .modal-close-btn {
+  font-size: 12px;
 }
 
 .modal-body {
